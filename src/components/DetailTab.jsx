@@ -96,22 +96,23 @@ export default function DetailTab({ selectedComponent, onComponentSelect, onBack
                 <thead>
                   <tr>
                     <th>State/UT</th>
-                    <th>Rate</th>
+                    <th>Salary Range</th>
+                    <th>PT Amount</th>
                     <th>Frequency</th>
-                    <th>Notes</th>
                   </tr>
                 </thead>
                 <tbody>
                   {Object.entries(PT_DETAILS).map(([stCode, data]) => {
                     const stName = STATES.find(s => s.code === stCode)?.name || stCode;
-                    return (
-                      <tr key={stCode}>
-                        <td style={{ fontWeight: 500 }}>{stName}</td>
-                        <td>{data.rate}</td>
-                        <td>{data.freq}</td>
-                        <td>{data.notes}</td>
+                    if (!data.slabs || data.slabs.length === 0) return null;
+                    return data.slabs.map((slab, idx) => (
+                      <tr key={`${stCode}-${idx}`}>
+                        {idx === 0 && <td rowSpan={data.slabs.length} style={{ fontWeight: 600, verticalAlign: 'top', background: '#fff' }}>{stName}</td>}
+                        <td style={{ fontSize: 12 }}>{slab.range}</td>
+                        <td style={{ fontWeight: 500, color: '#0f172a' }}>{slab.amount}</td>
+                        {idx === 0 && <td rowSpan={data.slabs.length} style={{ verticalAlign: 'top', fontSize: 11, color: '#64748b', background: '#fff' }}>{data.freq}</td>}
                       </tr>
-                    );
+                    ));
                   })}
                 </tbody>
               </table>
@@ -127,6 +128,7 @@ export default function DetailTab({ selectedComponent, onComponentSelect, onBack
                 <thead>
                   <tr>
                     <th>State/UT</th>
+                    <th>Salary Range</th>
                     <th>Employee Share</th>
                     <th>Employer Share</th>
                     <th>Frequency</th>
@@ -135,14 +137,16 @@ export default function DetailTab({ selectedComponent, onComponentSelect, onBack
                 <tbody>
                   {Object.entries(LWF_DETAILS).map(([stCode, data]) => {
                     const stName = STATES.find(s => s.code === stCode)?.name || stCode;
-                    return (
-                      <tr key={stCode}>
-                        <td style={{ fontWeight: 500 }}>{stName}</td>
-                        <td>{data.emp}</td>
-                        <td>{data.er}</td>
-                        <td>{data.freq}</td>
+                    if (!data.slabs || data.slabs.length === 0) return null;
+                    return data.slabs.map((slab, idx) => (
+                      <tr key={`${stCode}-${idx}`}>
+                        {idx === 0 && <td rowSpan={data.slabs.length} style={{ fontWeight: 600, verticalAlign: 'top', background: '#fff' }}>{stName}</td>}
+                        <td style={{ fontSize: 12 }}>{slab.range}</td>
+                        <td style={{ fontWeight: 500, color: '#0f172a' }}>{slab.emp}</td>
+                        <td style={{ fontWeight: 500, color: '#0f172a' }}>{slab.er}</td>
+                        {idx === 0 && <td rowSpan={data.slabs.length} style={{ verticalAlign: 'top', fontSize: 11, color: '#64748b', background: '#fff' }}>{data.freq}</td>}
                       </tr>
-                    );
+                    ));
                   })}
                 </tbody>
               </table>

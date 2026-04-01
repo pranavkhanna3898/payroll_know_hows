@@ -1,27 +1,116 @@
 export const PT_DETAILS = {
-  MH: { rate: "₹175–₹300/m", freq: "Monthly", notes: "₹300 in Feb; nil ≤₹7,500" },
-  KA: { rate: "₹200/m", freq: "Monthly", notes: "Nil ≤₹25,000; ₹200 above" },
-  WB: { rate: "₹110–₹200/m", freq: "Monthly", notes: "Nil ≤₹10,000" },
-  TN: { rate: "₹135–₹1,250/hyr", freq: "Half-yearly", notes: "Nil if annual salary ≤₹21,000" },
-  GJ: { rate: "₹80–₹200/m", freq: "Monthly", notes: "Nil ≤₹5,999" },
-  AP: { rate: "₹150–₹200/m", freq: "Monthly", notes: "Nil ≤₹15,000" },
-  TG: { rate: "₹150–₹200/m", freq: "Monthly", notes: "Nil ≤₹15,000" },
-  KL: { rate: "₹600–₹1,200/hyr", freq: "Half-yearly", notes: "Nil if annual salary <₹2L" },
-  MP: { rate: "₹125–₹208/m", freq: "Monthly", notes: "Nil ≤₹18,750" },
-  OD: { rate: "₹125–₹208/m", freq: "Monthly", notes: "Nil ≤₹13,304" },
-  DL: { rate: "N/A", freq: "N/A", notes: "No Professional Tax" },
-  HR: { rate: "N/A", freq: "N/A", notes: "No Professional Tax" },
-  PB: { rate: "N/A", freq: "N/A", notes: "No Professional Tax" },
-  UP: { rate: "N/A", freq: "N/A", notes: "No Professional Tax" },
-  RJ: { rate: "N/A", freq: "N/A", notes: "No Professional Tax" },
-  HP: { rate: "N/A", freq: "N/A", notes: "No Professional Tax" },
-  JH: { rate: "₹100–₹150/m", freq: "Monthly", notes: "Nil ≤₹25,000" },
-  CH: { rate: "₹150–₹200/m", freq: "Monthly", notes: "Nil ≤₹12,500" },
-  AS: { rate: "₹150–₹208/m", freq: "Monthly", notes: "Nil ≤₹10,000" },
-  GO: { rate: "₹150–₹200/m", freq: "Monthly", notes: "Nil ≤₹15,000" },
-  MN: { rate: "₹50–₹208/m", freq: "Monthly", notes: "Multiple slabs" },
-  MG: { rate: "₹16–₹208/m", freq: "Monthly", notes: "Nil ≤₹4,166" },
-  TR: { rate: "₹150–₹200/m", freq: "Monthly", notes: "Nil ≤₹7,500" },
-  SK: { rate: "Nominal", freq: "Monthly", notes: "Limited categories" },
-  MZ: { rate: "₹50–₹208/m", freq: "Monthly", notes: "Multiple slabs" },
+  MH: {
+    freq: "Monthly",
+    slabs: [
+      { range: "Men: Up to ₹7,500 | Women: Up to ₹25,000", amount: "Nil" },
+      { range: "Men: > ₹7,500 | Women: > ₹25,000", amount: "₹200 (₹300 in Feb)" }
+    ]
+  },
+  KA: {
+    freq: "Monthly",
+    slabs: [
+      { range: "Up to ₹24,999", amount: "Nil" },
+      { range: "₹25,000 and above", amount: "₹200" }
+    ]
+  },
+  WB: {
+    freq: "Monthly",
+    slabs: [
+      { range: "Up to ₹10,000", amount: "Nil" },
+      { range: "₹10,001 - ₹15,000", amount: "₹110" },
+      { range: "₹15,001 - ₹25,000", amount: "₹130" },
+      { range: "₹25,001 - ₹40,000", amount: "₹150" },
+      { range: "Above ₹40,000", amount: "₹200" }
+    ]
+  },
+  TN: {
+    freq: "Half-Yearly",
+    slabs: [
+      { range: "Up to ₹21,000", amount: "Nil" },
+      { range: "₹21,001 - ₹30,000", amount: "₹135" },
+      { range: "₹30,001 - ₹45,000", amount: "₹315" },
+      { range: "₹45,001 - ₹60,000", amount: "₹390" },
+      { range: "₹60,001 - ₹75,000", amount: "₹855" },
+      { range: "Above ₹75,000", amount: "₹1,250" }
+    ]
+  },
+  GJ: {
+    freq: "Monthly",
+    slabs: [
+      { range: "Up to ₹11,999", amount: "Nil" },
+      { range: "₹12,000 and above", amount: "₹200" }
+    ]
+  },
+  AP: {
+    freq: "Monthly",
+    slabs: [
+      { range: "Up to ₹15,000", amount: "Nil" },
+      { range: "₹15,001 - ₹20,000", amount: "₹150" },
+      { range: "Above ₹20,000", amount: "₹200" }
+    ]
+  },
+  TG: {
+    freq: "Monthly",
+    slabs: [
+      { range: "Up to ₹15,000", amount: "Nil" },
+      { range: "₹15,001 - ₹20,000", amount: "₹150" },
+      { range: "Above ₹20,000", amount: "₹200" }
+    ]
+  },
+  KL: {
+    freq: "Half-Yearly",
+    slabs: [
+      { range: "Up to ₹11,999", amount: "Nil" },
+      { range: "₹12,000 - ₹17,999", amount: "₹120" },
+      { range: "₹18,000 - ₹29,999", amount: "₹180" },
+      { range: "₹30,000 - ₹44,999", amount: "₹300" },
+      { range: "₹45,000 - ₹59,999", amount: "₹450" },
+      { range: "₹60,000 - ₹74,999", amount: "₹600" },
+      { range: "₹75,000 - ₹99,999", amount: "₹750" },
+      { range: "₹1,00,000 - ₹1,24,999", amount: "₹1,000" },
+      { range: "Above ₹1,25,000", amount: "₹1,250" }
+    ]
+  },
+  MP: {
+    freq: "Monthly",
+    slabs: [
+      { range: "Up to ₹22,500", amount: "Nil" },
+      { range: "₹22,501 - ₹30,000", amount: "₹125" },
+      { range: "₹30,001 - ₹40,000", amount: "₹150" },
+      { range: "Above ₹40,000", amount: "₹208 (₹212 in March)" }
+    ]
+  },
+  OD: {
+    freq: "Monthly",
+    slabs: [
+      { range: "Up to ₹13,304", amount: "Nil" },
+      { range: "₹13,305 - ₹25,000", amount: "₹125" },
+      { range: "₹25,001 - ₹40,000", amount: "₹150" },
+      { range: "Above ₹40,000", amount: "₹200" }
+    ]
+  },
+  JH: {
+    freq: "Monthly",
+    slabs: [
+      { range: "Up to ₹25,000", amount: "Nil" },
+      { range: "₹25,001 - ₹40,000", amount: "₹100" },
+      { range: "₹40,001 - ₹60,000", amount: "₹150" },
+      { range: "Above ₹60,000", amount: "₹208" }
+    ]
+  },
+  AS: {
+    freq: "Monthly",
+    slabs: [
+      { range: "Up to ₹10,000", amount: "Nil" },
+      { range: "₹10,001 - ₹15,000", amount: "₹150" },
+      { range: "₹15,001 - ₹25,000", amount: "₹180" },
+      { range: "Above ₹25,000", amount: "₹208" }
+    ]
+  },
+  DL: { freq: "N/A", slabs: [{ range: "Not Applicable", amount: "N/A" }] },
+  HR: { freq: "N/A", slabs: [{ range: "Not Applicable", amount: "N/A" }] },
+  PB: { freq: "N/A", slabs: [{ range: "Not Applicable", amount: "N/A" }] },
+  UP: { freq: "N/A", slabs: [{ range: "Not Applicable", amount: "N/A" }] },
+  RJ: { freq: "N/A", slabs: [{ range: "Not Applicable", amount: "N/A" }] },
+  HP: { freq: "N/A", slabs: [{ range: "Not Applicable", amount: "N/A" }] }
 };
