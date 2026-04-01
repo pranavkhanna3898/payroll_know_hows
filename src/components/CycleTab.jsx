@@ -1,29 +1,60 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { PAYROLL_CYCLE } from '../data';
 
 export default function CycleTab() {
   const [hoveredStep, setHoveredStep] = useState(null);
+  const [selectedStep, setSelectedStep] = useState(null);
 
-  const isDependency = (stepId) => {
-    if (!hoveredStep) return false;
-    let hoveredObj = null;
+  const activeStep = selectedStep || hoveredStep;
+
+  // Helper mapping for quick lookup
+  const allStepsMap = useMemo(() => {
+    const map = {};
     PAYROLL_CYCLE.forEach(p => {
-      const s = p.steps.find(x => x.id === hoveredStep);
-      if (s) hoveredObj = s;
+      p.steps.forEach(s => {
+        map[s.id] = s;
+      });
     });
-    if (!hoveredObj) return false;
-    return hoveredObj.dependencies.includes(stepId);
+    return map;
+  }, []);
+
+  const isDependency = (stepId, targetStepId) => {
+    if (!targetStepId) return false;
+    const targetObj = allStepsMap[targetStepId];
+    if (!targetObj) return false;
+    return targetObj.dependencies.includes(stepId);
   };
 
-  const isDependentOnHover = (stepId) => {
-    if (!hoveredStep) return false;
-    let currentObj = null;
-    PAYROLL_CYCLE.forEach(p => {
-      const s = p.steps.find(x => x.id === stepId);
-      if (s) currentObj = s;
-    });
+  const isDependentOnTarget = (stepId, targetStepId) => {
+    if (!targetStepId) return false;
+    const currentObj = allStepsMap[stepId];
     if (!currentObj) return false;
-    return currentObj.dependencies.includes(hoveredStep);
+    return currentObj.dependencies.includes(targetStepId);
+  };
+
+  // Get lists of linked step names for the chips
+  const getDependencyChips = (stepId) => {
+    const obj = allStepsMap[stepId];
+    if (!obj || !obj.dependencies || obj.dependencies.length === 0) return [];
+    return obj.dependencies.map(id => ({ id, title: allStepsMap[id]?.title || id }));
+  };
+
+  const getDependentChips = (stepId) => {
+    const dependents = [];
+    Object.values(allStepsMap).forEach(s => {
+      if (s.dependencies && s.dependencies.includes(stepId)) {
+        dependents.push({ id: s.id, title: s.title });
+      }
+    });
+    return dependents;
+  };
+
+  const handleCardClick = (stepId) => {
+    if (selectedStep === stepId) {
+        setSelectedStep(null); // Toggle off if clicked again
+    } else {
+        setSelectedStep(stepId); // Lock selection
+    }
   };
 
   return (
@@ -31,9 +62,9 @@ export default function CycleTab() {
       <div className="cycle-header">
         <h2 className="tab-heading">Indian Payroll Cycle & Data Flow</h2>
         <p className="tab-subheading" style={{ marginBottom: 24, maxWidth: 800 }}>
-          Hover over any step to see its interdependencies. 
-          Steps highlighted in <span style={{ color: '#10b981', fontWeight: 600 }}>green</span> provide data to the hovered step. 
-          Steps highlighted in <span style={{ color: '#8b5cf6', fontWeight: 600 }}>purple</span> depend on data from the hovered step.
+          Hover over or click any step to see its interdependencies. 
+          Steps highlighted in <span style={{ color: '#10b981', fontWeight: 600 }}>green</span> provide data to the selected step. 
+          Steps highlighted in <span style={{ color: '#8b5cf6', fontWeight: 600 }}>purple</span> depend on data from the selected step.
         </p>
       </div>
 
@@ -47,31 +78,59 @@ export default function CycleTab() {
             
             <div className="cycle-steps-list">
               {phase.steps.map((step) => {
-                const isDep = isDependency(step.id);
-                const isDependant = isDependentOnHover(step.id);
-                const isHovered = hoveredStep === step.id;
+                const isDep = isDependency(step.id, activeStep);
+                const isDependant = isDependentOnTarget(step.id, activeStep);
+                const isActive = activeStep === step.id;
                 
-                let cardClass = "cycle-step-card detailed-card";
-                if (hoveredStep && !isHovered && !isDep && !isDependant) cardClass += " cycle-step-dimmed";
-                if (isHovered) cardClass += " cycle-step-active-card";
+                let cardClass = "cycle-step-card detailed-card clickable-card";
+                if (activeStep && !isActive && !isDep && !isDependant) cardClass += " cycle-step-dimmed";
+                if (isActive) cardClass += selectedStep === step.id ? " cycle-step-selected-card" : " cycle-step-active-card";
                 if (isDep) cardClass += " cycle-step-dependency";
                 if (isDependant) cardClass += " cycle-step-dependent";
+
+                const dependencyChips = getDependencyChips(step.id);
+                const dependentChips = getDependentChips(step.id);
 
                 return (
                   <div 
                     key={step.id} 
                     className={cardClass}
+                    onClick={() => handleCardClick(step.id)}
                     onMouseEnter={() => setHoveredStep(step.id)}
                     onMouseLeave={() => setHoveredStep(null)}
-                    style={{ borderLeftColor: isHovered || isDep || isDependant ? undefined : phase.color }}
+                    style={{ borderLeftColor: isActive || isDep || isDependant ? undefined : phase.color }}
                   >
                     <div className="detailed-card-header">
                       <div className="step-id">{step.id.toUpperCase().replace('-', ' ')}</div>
                       <div className="step-title">{step.title}</div>
+                      {selectedStep === step.id && (
+                          <div className="pin-badge">📌 Pinned</div>
+                      )}
                     </div>
                     <div className="step-desc" style={{ fontSize: '13px', fontWeight: 500, color: '#334155' }}>
                       {step.description}
                     </div>
+
+                    {(isActive || selectedStep === step.id) && (dependencyChips.length > 0 || dependentChips.length > 0) && (
+                      <div className="linked-chips-container">
+                        {dependencyChips.length > 0 && (
+                          <div className="chip-row">
+                            <span className="chip-label">Inputs from:</span>
+                            {dependencyChips.map(c => (
+                              <span key={c.id} className="flow-chip chip-input">↑ {c.title}</span>
+                            ))}
+                          </div>
+                        )}
+                        {dependentChips.length > 0 && (
+                          <div className="chip-row">
+                            <span className="chip-label">Outputs to:</span>
+                            {dependentChips.map(c => (
+                              <span key={c.id} className="flow-chip chip-output">↓ {c.title}</span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     <div className="detailed-card-grid">
                       {step.dataDependencies && step.dataDependencies.length > 0 && (

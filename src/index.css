@@ -891,3 +891,75 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* ---- New Enhancements: Pinning and Chips ---- */
+.clickable-card {
+  cursor: pointer;
+  user-select: none;
+}
+
+.cycle-step-selected-card {
+  border-left-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.6);
+  transform: scale(1.02);
+  z-index: 10;
+  background: #f8fafc;
+}
+
+.pin-badge {
+  margin-left: auto;
+  font-size: 10px;
+  background: #e2e8f0;
+  color: #0f172a;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.linked-chips-container {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: white;
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.chip-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  width: 75px;
+}
+
+.flow-chip {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chip-input {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #10b981;
+}
+
+.chip-output {
+  background: #f3e8ff;
+  color: #7e22ce;
+  border: 1px solid #a855f7;
+}
