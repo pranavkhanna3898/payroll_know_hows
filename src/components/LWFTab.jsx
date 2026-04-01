@@ -13,7 +13,7 @@ export default function LWFTab() {
       <div className="card-grid">
         {STATES.map((st) => {
           const lwf = LWF_DETAILS[st.code];
-          const hasLWF = lwf && lwf.emp !== "N/A";
+          const hasLWF = lwf && lwf.freq !== "N/A";
           return (
             <div
               key={st.code}
@@ -39,18 +39,21 @@ export default function LWFTab() {
                 </div>
               </div>
               {hasLWF ? (
-                <div className="lwf-details-grid">
-                  <div className="detail-chip detail-chip--green">
-                    <div className="detail-chip-label">Employee</div>
-                    <div className="detail-chip-value" style={{ color: "#059669" }}>{lwf.emp}</div>
-                  </div>
-                  <div className="detail-chip detail-chip--purple">
-                    <div className="detail-chip-label">Employer</div>
-                    <div className="detail-chip-value" style={{ color: "#7c3aed" }}>{lwf.er}</div>
-                  </div>
-                  <div className="detail-chip detail-chip--amber">
+                <div className="state-card-details" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div className="detail-chip detail-chip--amber" style={{ alignSelf: 'flex-start' }}>
                     <div className="detail-chip-label">Frequency</div>
                     <div className="detail-chip-value" style={{ color: "#d97706" }}>{lwf.freq}</div>
+                  </div>
+                  <div className="slabs-mini-list" style={{ marginTop: 4 }}>
+                    {lwf.slabs.map((slab, i) => (
+                      <div key={i} style={{ borderBottom: '1px solid #f1f5f9', padding: '6px 0', fontSize: 13 }}>
+                        <div style={{ color: '#475569', marginBottom: 6 }}>{slab.range}</div>
+                        <div style={{ display: 'flex', gap: 16 }}>
+                          <div><span style={{ fontSize: 11, color: '#64748b' }}>EE:</span> <span style={{ fontWeight: 600, color: '#059669' }}>{slab.emp}</span></div>
+                          <div><span style={{ fontSize: 11, color: '#64748b' }}>ER:</span> <span style={{ fontWeight: 600, color: '#7c3aed' }}>{slab.er}</span></div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               ) : (

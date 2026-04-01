@@ -13,7 +13,7 @@ export default function PTTab() {
       <div className="card-grid">
         {STATES.map((st) => {
           const pt = PT_DETAILS[st.code];
-          const hasPT = pt && pt.rate !== "N/A";
+          const hasPT = pt && pt.freq !== "N/A";
           return (
             <div
               key={st.code}
@@ -39,19 +39,20 @@ export default function PTTab() {
                 </div>
               </div>
               {hasPT ? (
-                <>
-                  <div className="state-card-details">
-                    <div className="detail-chip detail-chip--blue">
-                      <div className="detail-chip-label">Rate</div>
-                      <div className="detail-chip-value" style={{ color: "#0369a1" }}>{pt.rate}</div>
-                    </div>
-                    <div className="detail-chip detail-chip--green">
-                      <div className="detail-chip-label">Frequency</div>
-                      <div className="detail-chip-value" style={{ color: "#16a34a" }}>{pt.freq}</div>
-                    </div>
+                <div className="state-card-details" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div className="detail-chip detail-chip--green" style={{ alignSelf: 'flex-start' }}>
+                    <div className="detail-chip-label">Frequency</div>
+                    <div className="detail-chip-value" style={{ color: "#16a34a" }}>{pt.freq}</div>
                   </div>
-                  <div className="state-card-note">📌 {pt.notes}</div>
-                </>
+                  <div className="slabs-mini-list" style={{ marginTop: 4 }}>
+                    {pt.slabs.map((slab, i) => (
+                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #f1f5f9', padding: '6px 0', fontSize: 13 }}>
+                        <span style={{ color: '#475569', paddingRight: '12px' }}>{slab.range}</span>
+                        <span style={{ fontWeight: 600, color: '#0f172a', textAlign: 'right' }}>{slab.amount}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               ) : (
                 <div className="state-card-empty">
                   No Professional Tax legislation in this state.
