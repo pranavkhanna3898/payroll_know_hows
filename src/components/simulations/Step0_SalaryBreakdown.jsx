@@ -40,6 +40,7 @@ export default function Step0_SalaryBreakdown({ state }) {
                 <option value="earnings_basic">Earnings - Basic</option>
                 <option value="earnings_hra">Earnings - HRA</option>
                 <option value="earnings_allowance">Earnings - Taxable Allowance</option>
+                <option value="variable">Variable Earnings (Bonus/PLI)</option>
                 <option value="reimbursement">Reimbursement (Exempt)</option>
                 <option value="employer_contrib">Employer Contribution</option>
                 <option value="employee_deduction">Employee Deduction</option>

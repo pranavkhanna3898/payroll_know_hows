@@ -10,18 +10,19 @@ export default function SimulationsTab() {
   const [data, setData] = useState({
     // Step 1 Inputs
     salaryComponents: [
-      { id: '1', name: 'Basic', type: 'earnings_basic', amount: 25000 },
-      { id: '2', name: 'HRA', type: 'earnings_hra', amount: 10000 },
-      { id: '3', name: 'Special Allowance', type: 'earnings_allowance', amount: 15000 },
-      { id: '4', name: 'Reimbursements', type: 'reimbursement', amount: 0 },
-      { id: '5', name: 'Employer PF Contribution', type: 'employer_contrib', amount: 1800 },
-      { id: '6', name: 'Employer ESI Contribution', type: 'employer_contrib', amount: 0 }
+      { id: '1', name: 'Basic', type: 'earnings_basic', amount: 25000, currentPayout: 0 },
+      { id: '2', name: 'HRA', type: 'earnings_hra', amount: 10000, currentPayout: 0 },
+      { id: '3', name: 'Special Allowance', type: 'earnings_allowance', amount: 15000, currentPayout: 0 },
+      { id: '4', name: 'Reimbursements', type: 'reimbursement', amount: 0, currentPayout: 0 },
+      { id: '5', name: 'Employer PF Contribution', type: 'employer_contrib', amount: 1800, currentPayout: 0 },
+      { id: '6', name: 'Employer ESI Contribution', type: 'employer_contrib', amount: 0, currentPayout: 0 }
     ],
     daysInMonth: 30,
     lopDays: 0,
     overtimeHours: 0,
     otRate: 500,
-    arrears: 0,
+    leaveEncashmentDays: 0,
+    arrearEntries: [],
 
     // Step 2 Inputs
     taxRegime: "new",
@@ -57,7 +58,7 @@ export default function SimulationsTab() {
       ...prev,
       salaryComponents: [
         ...prev.salaryComponents,
-        { id: Date.now().toString(), name: 'New Component', type: 'earnings_allowance', amount: 0 }
+        { id: Date.now().toString(), name: 'New Component', type: 'earnings_allowance', amount: 0, currentPayout: 0 }
       ]
     }));
   };
@@ -69,6 +70,29 @@ export default function SimulationsTab() {
     }));
   };
 
+  const addArrearEntry = () => {
+    setData(prev => ({
+      ...prev,
+      arrearEntries: [...prev.arrearEntries, { id: Date.now().toString(), monthDays: 30, arrearDays: 0 }]
+    }));
+  };
+
+  const updateArrearEntry = (id, field, value) => {
+    setData(prev => ({
+      ...prev,
+      arrearEntries: prev.arrearEntries.map(a => 
+        a.id === id ? { ...a, [field]: Number(value) } : a
+      )
+    }));
+  };
+
+  const removeArrearEntry = (id) => {
+    setData(prev => ({
+      ...prev,
+      arrearEntries: prev.arrearEntries.filter(a => a.id !== id)
+    }));
+  };
+
   // Shared derived calculations
   let standardBasic = 0;
   let standardHRA = 0;
@@ -76,6 +100,8 @@ export default function SimulationsTab() {
   let monthlyReimbursements = 0;
   let employerContribs = 0;
   let employeeDeductions = 0;
+  let variableTarget = 0;
+  let variablePay = 0;
 
   data.salaryComponents.forEach(c => {
     if (c.type === 'earnings_basic') standardBasic += c.amount;
@@ -84,18 +110,28 @@ export default function SimulationsTab() {
     else if (c.type === 'reimbursement') monthlyReimbursements += c.amount;
     else if (c.type === 'employer_contrib') employerContribs += c.amount;
     else if (c.type === 'employee_deduction') employeeDeductions += c.amount;
+    else if (c.type === 'variable') {
+      variableTarget += c.amount;
+      variablePay += (c.currentPayout || 0);
+    }
   });
 
   const standardGross = standardBasic + standardHRA + standardSpecial;
-  const totalMonthlyCTC = standardGross + monthlyReimbursements + employerContribs;
+  const totalMonthlyCTC = standardGross + monthlyReimbursements + employerContribs + variableTarget;
 
   const attendanceFactor = Math.max(0, (data.daysInMonth - data.lopDays) / data.daysInMonth);
   const basic = standardBasic * attendanceFactor;
   const hra = standardHRA * attendanceFactor;
   const special = standardSpecial * attendanceFactor;
   const overtimePay = data.overtimeHours * data.otRate;
+  const leaveEncashmentPay = (standardGross / 26) * data.leaveEncashmentDays;
+
+  let arrearsPay = 0;
+  data.arrearEntries.forEach(entry => {
+    arrearsPay += (standardGross / entry.monthDays) * entry.arrearDays;
+  });
   
-  const grossSalary = basic + hra + special + overtimePay + data.arrears;
+  const grossSalary = basic + hra + special + overtimePay + arrearsPay + leaveEncashmentPay + variablePay;
 
   const annualGross = (standardGross * 11) + grossSalary; 
   
@@ -168,9 +204,9 @@ export default function SimulationsTab() {
 
   const simState = {
     ...data,
-    updateData, updateComponent, addComponent, removeComponent,
-    standardBasic, standardHRA, standardSpecial, monthlyReimbursements, employerContribs, employeeDeductions,
-    basic, hra, special, overtimePay, grossSalary, attendanceFactor,
+    updateData, updateComponent, addComponent, removeComponent, addArrearEntry, updateArrearEntry, removeArrearEntry,
+    standardBasic, standardHRA, standardSpecial, monthlyReimbursements, employerContribs, employeeDeductions, variableTarget, variablePay,
+    basic, hra, special, overtimePay, arrearsPay, leaveEncashmentPay, grossSalary, attendanceFactor,
     taxableIncome, annualTax, tds,
     pfEmployee, pfEmployer, esiEmployee, esiEmployer, pt, lwf,
     totalDeductions, netPay, taxFormulaDetail, totalMonthlyCTC, standardGross
