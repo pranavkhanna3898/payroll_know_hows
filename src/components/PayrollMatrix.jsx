@@ -7,6 +7,7 @@ import PTTab from './PTTab';
 import LWFTab from './LWFTab';
 import CycleTab from './CycleTab';
 import DetailTab from './DetailTab';
+import SimulationsTab from './simulations/SimulationsTab';
 
 export default function PayrollMatrix() {
   const [activeTab, setActiveTab] = useState("matrix");
@@ -42,6 +43,7 @@ export default function PayrollMatrix() {
         {activeTab === "pt" && <PTTab />}
         {activeTab === "lwf" && <LWFTab />}
         {activeTab === "cycle" && <CycleTab />}
+        {activeTab === "simulations" && <SimulationsTab />}
 
         {activeTab === "detail" && (
           <DetailTab

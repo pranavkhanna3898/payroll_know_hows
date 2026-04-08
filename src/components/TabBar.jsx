@@ -3,6 +3,7 @@ const TABS = [
   { id: "pt", label: "🏛️ Professional Tax" },
   { id: "lwf", label: "⚖️ Labour Welfare Fund" },
   { id: "cycle", label: "🔄 Payroll Cycle & Flow" },
+  { id: "simulations", label: "⚙️ Simulations" },
   { id: "detail", label: "📋 Component Detail" },
 ];
 
