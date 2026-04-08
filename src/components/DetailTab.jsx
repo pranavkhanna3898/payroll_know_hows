@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { STATES, STATUS, CATEGORIES, PT_DETAILS, LWF_DETAILS } from '../data';
 
 function countByStatus(comp) {
@@ -9,6 +10,8 @@ function countByStatus(comp) {
 }
 
 export default function DetailTab({ selectedComponent, onComponentSelect, onBack }) {
+  const [regime, setRegime] = useState('new');
+
   if (!selectedComponent) {
     return (
       <div>
@@ -31,7 +34,9 @@ export default function DetailTab({ selectedComponent, onComponentSelect, onBack
               >
                 <div className="comp-name">{comp.name}</div>
                 <div className="comp-category" style={{ marginBottom: 8 }}>{cat.name}</div>
-                <div style={{ fontSize: 11, color: "#64748b" }}>{comp.taxNote}</div>
+                <div style={{ fontSize: 11, color: "#64748b" }}>
+                  {comp[`taxNote${regime === 'new' ? 'New' : 'Old'}`] || comp.taxNote}
+                </div>
                 <div className="status-badges">
                   {(() => {
                     const counts = countByStatus(comp);
@@ -58,7 +63,21 @@ export default function DetailTab({ selectedComponent, onComponentSelect, onBack
 
   return (
     <div>
-      <button onClick={onBack} className="back-button">← Back to All Components</button>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <button onClick={onBack} className="back-button">← Back to All Components</button>
+        <div style={{ display: 'flex', background: '#f1f5f9', padding: '4px', borderRadius: '8px' }}>
+          <button 
+            onClick={() => setRegime('new')}
+            style={{ padding: '6px 12px', fontSize: 13, fontWeight: 500, borderRadius: '6px', background: regime === 'new' ? '#fff' : 'transparent', border: 'none', boxShadow: regime === 'new' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none', color: regime === 'new' ? '#0f172a' : '#64748b', cursor: 'pointer' }}>
+            New Regime
+          </button>
+          <button 
+            onClick={() => setRegime('old')}
+            style={{ padding: '6px 12px', fontSize: 13, fontWeight: 500, borderRadius: '6px', background: regime === 'old' ? '#fff' : 'transparent', border: 'none', boxShadow: regime === 'old' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none', color: regime === 'old' ? '#0f172a' : '#64748b', cursor: 'pointer' }}>
+            Old Regime
+          </button>
+        </div>
+      </div>
       <div className="detail-panel">
         <div
           className="detail-panel-header"
@@ -84,7 +103,9 @@ export default function DetailTab({ selectedComponent, onComponentSelect, onBack
           </div>
           <div className="detail-info-card">
             <div className="detail-info-label">💡 Tax Treatment</div>
-            <div style={{ fontSize: 13, color: "#0f172a" }}>{selectedComponent.taxNote}</div>
+            <div style={{ fontSize: 13, color: "#0f172a" }}>
+              {selectedComponent[`taxNote${regime === 'new' ? 'New' : 'Old'}`] || selectedComponent.taxNote}
+            </div>
           </div>
         </div>
 
@@ -156,7 +177,7 @@ export default function DetailTab({ selectedComponent, onComponentSelect, onBack
 
         {selectedComponent.id === 'tds' && (
           <div className="detail-slabs-section" style={{ marginTop: 24, marginBottom: 24 }}>
-            <h3 style={{ fontSize: 14, color: '#1e293b', marginBottom: 12 }}>📊 Income Tax Regimes (FY 2024-25)</h3>
+            <h3 style={{ fontSize: 14, color: '#1e293b', marginBottom: 12 }}>📊 Income Tax Regimes (FY 2026-27)</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 16 }}>
               <div className="slabs-table-wrapper">
                 <div style={{ background: '#f8fafc', padding: '10px 12px', fontWeight: 600, border: '1px solid #e2e8f0', borderBottom: 'none', borderRadius: '6px 6px 0 0', fontSize: 13 }}>New Regime (Default)</div>
@@ -166,12 +187,14 @@ export default function DetailTab({ selectedComponent, onComponentSelect, onBack
                       <tr><th>Income Slab</th><th>Tax Rate</th></tr>
                     </thead>
                     <tbody>
-                      <tr><td>Up to ₹3,00,000</td><td>Nil</td></tr>
-                      <tr><td>₹3,00,001 - ₹7,00,000</td><td>5%</td></tr>
-                      <tr><td>₹7,00,001 - ₹10,00,000</td><td>10%</td></tr>
-                      <tr><td>₹10,00,001 - ₹12,00,000</td><td>15%</td></tr>
-                      <tr><td>₹12,00,001 - ₹15,00,000</td><td>20%</td></tr>
-                      <tr><td>Above ₹15,00,000</td><td>30%</td></tr>
+                      <tr><td>Up to ₹4,00,000</td><td>Nil</td></tr>
+                      <tr><td>₹4,00,001 - ₹8,00,000</td><td>5%</td></tr>
+                      <tr><td>₹8,00,001 - ₹12,00,000</td><td>10%</td></tr>
+                      <tr><td>₹12,00,001 - ₹16,00,000</td><td>15%</td></tr>
+                      <tr><td>₹16,00,001 - ₹20,00,000</td><td>20%</td></tr>
+                      <tr><td>₹20,00,001 - ₹24,00,000</td><td>25%</td></tr>
+                      <tr><td>Above ₹24,00,000</td><td>30%</td></tr>
+                      <tr><td colSpan="2" style={{ fontStyle: 'italic', fontSize: '11px' }}>Tax rebate up to ₹12 Lakhs income. Standard Deduction: ₹75,000.</td></tr>
                     </tbody>
                   </table>
                 </div>
@@ -188,7 +211,7 @@ export default function DetailTab({ selectedComponent, onComponentSelect, onBack
                       <tr><td>₹2,50,001 - ₹5,00,000</td><td>5%</td></tr>
                       <tr><td>₹5,00,001 - ₹10,00,000</td><td>20%</td></tr>
                       <tr><td>Above ₹10,00,000</td><td>30%</td></tr>
-                      <tr><td colSpan="2" style={{ fontStyle: 'italic', fontSize: '11px' }}>Exemptions under Ch VI-A available.</td></tr>
+                      <tr><td colSpan="2" style={{ fontStyle: 'italic', fontSize: '11px' }}>Exemptions under Ch VI-A available. Standard Deduction: ₹50,000.</td></tr>
                     </tbody>
                   </table>
                 </div>
