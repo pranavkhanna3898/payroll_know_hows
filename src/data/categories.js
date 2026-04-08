@@ -10,7 +10,7 @@ export const CATEGORIES = [
         base: "Basic + DA",
         formula: "12% × (Basic + DA); capped at ₹15,000 if opted",
         taxNote: "80C deductible; interest tax-free up to ₹2.5L p.a.",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Uniform across all states; governed by EPF Act 1952. Threshold: 20+ employees.",
       },
       {
@@ -19,7 +19,7 @@ export const CATEGORIES = [
         base: "Gross Wages",
         formula: "0.75% × Gross Wages; only if Gross ≤ ₹21,000/month",
         taxNote: "No specific tax deduction for employee",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Uniform rate; applicable in ESI-notified areas (596+ districts). Coverage expands periodically.",
       },
       {
@@ -28,7 +28,7 @@ export const CATEGORIES = [
         base: "Monthly Gross (varies by state)",
         formula: "Slab-based per state law; max ₹2,500/year",
         taxNote: "Deductible u/s 16(iii) of Income Tax Act",
-        states: { MH:"V",KA:"V",WB:"V",TN:"V",GJ:"V",AP:"V",TG:"V",KL:"V",MP:"V",OD:"V",DL:"N",HR:"N",PB:"N",UP:"N",RJ:"N",HP:"N",JH:"V",CH:"V",AS:"V",GO:"V",MN:"V",MG:"V",TR:"V",SK:"V",MZ:"V" },
+        states: { AN:"N", AP:"V", AR:"N", AS:"V", BR:"V", CH:"N", CG:"V", DN:"N", DL:"N", GA:"V", GJ:"V", HR:"N", HP:"N", JK:"N", JH:"V", KA:"V", KL:"V", LA:"N", LD:"N", MP:"V", MH:"V", MN:"V", ML:"V", MZ:"V", NL:"V", OD:"V", PY:"V", PB:"N", RJ:"N", SK:"V", TN:"V", TG:"V", TR:"V", UP:"N", UK:"N", WB:"V" },
         notes: "~20 states have PT. Delhi, UP, Rajasthan, Haryana, Punjab, HP have NO PT. Frequency varies: monthly, quarterly, half-yearly, or annually by state.",
       },
       {
@@ -37,7 +37,7 @@ export const CATEGORIES = [
         base: "State-specific",
         formula: "Nominal fixed amounts; ₹3 to ₹48 per contribution period",
         taxNote: "No specific tax deduction",
-        states: { MH:"V",KA:"V",WB:"M",TN:"V",GJ:"V",AP:"V",TG:"V",KL:"M",MP:"V",OD:"M",DL:"M",HR:"M",PB:"V",UP:"N",RJ:"N",HP:"N",JH:"V",CH:"V",AS:"V",GO:"M",MN:"N",MG:"N",TR:"N",SK:"N",MZ:"N" },
+        states: { AN:"N", AP:"V", AR:"N", AS:"N", BR:"N", CH:"V", CG:"V", DN:"N", DL:"V", GA:"V", GJ:"V", HR:"V", HP:"N", JK:"N", JH:"V", KA:"V", KL:"V", LA:"N", LD:"N", MP:"V", MH:"V", MN:"N", ML:"N", MZ:"N", NL:"N", OD:"V", PY:"N", PB:"V", RJ:"N", SK:"N", TN:"V", TG:"V", TR:"N", UP:"N", UK:"N", WB:"V" },
         notes: "~18 states have LWF. Rajasthan, HP, UP have no LWF. Frequency: monthly (WB, KL, OD, GO), semi-annual (MH), annual (KA, TN, AP, TG, MP).",
       },
       {
@@ -46,7 +46,7 @@ export const CATEGORIES = [
         base: "Annual Taxable Income",
         formula: "Old Regime: 5%/20%/30% slabs; New Regime: 5%/10%/15%/20%/30% slabs + 4% cess",
         taxNote: "IS the tax — Form 24Q quarterly return; Form 16 annually",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Uniform across all states; central legislation. Employee chooses Old or New regime each year.",
       },
       {
@@ -55,7 +55,7 @@ export const CATEGORIES = [
         base: "Basic + DA",
         formula: "Employee-chosen %; added to EPF 12%; employer not required to match",
         taxNote: "80C deductible; interest on total PF > ₹2.5L/year taxable",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "Optional for all states. Employee may choose any % in addition to the mandatory 12%.",
       },
       {
@@ -64,7 +64,7 @@ export const CATEGORIES = [
         base: "Per sanction letter",
         formula: "EMI = Principal / Tenure + Interest; per approved schedule",
         taxNote: "Housing loan interest: 80EEA / 24(b); Education: 80E; Others: no deduction",
-        states: { MH:"C",KA:"C",WB:"C",TN:"C",GJ:"C",AP:"C",TG:"C",KL:"C",MP:"C",OD:"C",DL:"C",HR:"C",PB:"C",UP:"C",RJ:"C",HP:"C",JH:"C",CH:"C",AS:"C",GO:"C",MN:"C",MG:"C",TR:"C",SK:"C",MZ:"C" },
+        states: { AN:"C", AP:"C", AR:"C", AS:"C", BR:"C", CH:"C", CG:"C", DN:"C", DL:"C", GA:"C", GJ:"C", HR:"C", HP:"C", JK:"C", JH:"C", KA:"C", KL:"C", LA:"C", LD:"C", MP:"C", MH:"C", MN:"C", ML:"C", MZ:"C", NL:"C", OD:"C", PY:"C", PB:"C", RJ:"C", SK:"C", TN:"C", TG:"C", TR:"C", UP:"C", UK:"C", WB:"C" },
         notes: "Applicable only if employee has an outstanding loan/advance. Policy-driven.",
       },
       {
@@ -73,7 +73,7 @@ export const CATEGORIES = [
         base: "Meal consumption log / Fixed",
         formula: "Per meal rate × Days consumed / Fixed monthly",
         taxNote: "Paid from post-tax income; reduces net pay",
-        states: { MH:"C",KA:"C",WB:"C",TN:"C",GJ:"C",AP:"C",TG:"C",KL:"C",MP:"C",OD:"C",DL:"C",HR:"C",PB:"C",UP:"C",RJ:"C",HP:"C",JH:"C",CH:"C",AS:"C",GO:"C",MN:"C",MG:"C",TR:"C",SK:"C",MZ:"C" },
+        states: { AN:"C", AP:"C", AR:"C", AS:"C", BR:"C", CH:"C", CG:"C", DN:"C", DL:"C", GA:"C", GJ:"C", HR:"C", HP:"C", JK:"C", JH:"C", KA:"C", KL:"C", LA:"C", LD:"C", MP:"C", MH:"C", MN:"C", ML:"C", MZ:"C", NL:"C", OD:"C", PY:"C", PB:"C", RJ:"C", SK:"C", TN:"C", TG:"C", TR:"C", UP:"C", UK:"C", WB:"C" },
         notes: "Very common in manufacturing setups under Factories Act requirements."
       },
       {
@@ -82,7 +82,7 @@ export const CATEGORIES = [
         base: "Fixed amount or route base",
         formula: "Standard deduction for availing company bus/cab",
         taxNote: "Paid from post-tax income",
-        states: { MH:"C",KA:"C",WB:"C",TN:"C",GJ:"C",AP:"C",TG:"C",KL:"C",MP:"C",OD:"C",DL:"C",HR:"C",PB:"C",UP:"C",RJ:"C",HP:"C",JH:"C",CH:"C",AS:"C",GO:"C",MN:"C",MG:"C",TR:"C",SK:"C",MZ:"C" },
+        states: { AN:"C", AP:"C", AR:"C", AS:"C", BR:"C", CH:"C", CG:"C", DN:"C", DL:"C", GA:"C", GJ:"C", HR:"C", HP:"C", JK:"C", JH:"C", KA:"C", KL:"C", LA:"C", LD:"C", MP:"C", MH:"C", MN:"C", ML:"C", MZ:"C", NL:"C", OD:"C", PY:"C", PB:"C", RJ:"C", SK:"C", TN:"C", TG:"C", TR:"C", UP:"C", UK:"C", WB:"C" },
         notes: "Deducted for subsidized transport facility provided to employees."
       },
       {
@@ -91,7 +91,7 @@ export const CATEGORIES = [
         base: "Disciplinary action",
         formula: "Authorized deduction under Payment of Wages Act (Sec 8)",
         taxNote: "Reduces taxable salary",
-        states: { MH:"C",KA:"C",WB:"C",TN:"C",GJ:"C",AP:"C",TG:"C",KL:"C",MP:"C",OD:"C",DL:"C",HR:"C",PB:"C",UP:"C",RJ:"C",HP:"C",JH:"C",CH:"C",AS:"C",GO:"C",MN:"C",MG:"C",TR:"C",SK:"C",MZ:"C" },
+        states: { AN:"C", AP:"C", AR:"C", AS:"C", BR:"C", CH:"C", CG:"C", DN:"C", DL:"C", GA:"C", GJ:"C", HR:"C", HP:"C", JK:"C", JH:"C", KA:"C", KL:"C", LA:"C", LD:"C", MP:"C", MH:"C", MN:"C", ML:"C", MZ:"C", NL:"C", OD:"C", PY:"C", PB:"C", RJ:"C", SK:"C", TN:"C", TG:"C", TR:"C", UP:"C", UK:"C", WB:"C" },
         notes: "Strictly governed by Payment of Wages Act. Requires written justification and limits."
       },
     ],
@@ -107,7 +107,7 @@ export const CATEGORIES = [
         base: "Basic + DA",
         formula: "3.67% × (Basic + DA); goes into employee's EPF account",
         taxNote: "Tax-free in employer's hands; part of CTC",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Uniform. Total employer EPF+EPS = 12%; split as EPF 3.67% + EPS 8.33% (max ₹1,250/month).",
       },
       {
@@ -116,7 +116,7 @@ export const CATEGORIES = [
         base: "Basic + DA (max ₹15,000)",
         formula: "8.33% × PF Wage; max ₹1,250/month; goes to Pension Fund",
         taxNote: "Not taxable",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Max EPS = ₹1,250/month (8.33% of ₹15,000). Higher EPS for pre-2014 employees who opted.",
       },
       {
@@ -125,7 +125,7 @@ export const CATEGORIES = [
         base: "Basic + DA",
         formula: "0.50% × PF Wage; max ₹75/month; death insurance",
         taxNote: "Not taxable to employee",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Max EDLI benefit to nominee: ₹7 lakh.",
       },
       {
@@ -134,7 +134,7 @@ export const CATEGORIES = [
         base: "Basic + DA",
         formula: "0.50% × PF Wage; min ₹500/month; EPFO levy",
         taxNote: "Employer expense; not on payslip",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Reduced from 0.85% to 0.50% (April 2017). Minimum ₹500/month even if calculated amount is lower.",
       },
       {
@@ -143,7 +143,7 @@ export const CATEGORIES = [
         base: "Gross Wages",
         formula: "3.25% × Gross Wages; only if Gross ≤ ₹21,000/month",
         taxNote: "Employer expense",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Uniform 3.25% (reduced from 4.75% in July 2019). Total ESI = 4% of gross.",
       },
       {
@@ -152,7 +152,7 @@ export const CATEGORIES = [
         base: "State-specific",
         formula: "Usually 2× employee contribution; nominal amounts",
         taxNote: "Employer expense",
-        states: { MH:"V",KA:"V",WB:"M",TN:"V",GJ:"V",AP:"V",TG:"V",KL:"M",MP:"V",OD:"M",DL:"M",HR:"M",PB:"V",UP:"N",RJ:"N",HP:"N",JH:"V",CH:"V",AS:"V",GO:"M",MN:"N",MG:"N",TR:"N",SK:"N",MZ:"N" },
+        states: { AN:"N", AP:"V", AR:"N", AS:"N", BR:"N", CH:"V", CG:"V", DN:"N", DL:"V", GA:"V", GJ:"V", HR:"V", HP:"N", JK:"N", JH:"V", KA:"V", KL:"V", LA:"N", LD:"N", MP:"V", MH:"V", MN:"N", ML:"N", MZ:"N", NL:"N", OD:"V", PY:"N", PB:"V", RJ:"N", SK:"N", TN:"V", TG:"V", TR:"N", UP:"N", UK:"N", WB:"V" },
         notes: "Mirrors employee LWF contribution (usually double). State-specific amounts and frequency.",
       },
       {
@@ -161,7 +161,7 @@ export const CATEGORIES = [
         base: "Basic + DA",
         formula: "4.81% × (Basic + DA) monthly provision; or actuarial valuation (Ind AS 19)",
         taxNote: "Deductible when actually paid; provision not immediately deductible",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Uniform Act; same formula everywhere. 5-year vesting (no waiting for death/disability). Max ₹20 lakh.",
       },
       {
@@ -170,7 +170,7 @@ export const CATEGORIES = [
         base: "Basic (max ₹7,000/month or min wage)",
         formula: "8.33% min; 20% max of annual bonus wage based on allocable surplus",
         taxNote: "Deductible when paid; provision may not be deductible",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Payment of Bonus Act uniform. Eligibility: salary ≤ ₹21,000/month. Min 30 working days per year.",
       },
       {
@@ -179,7 +179,7 @@ export const CATEGORIES = [
         base: "Basic + DA",
         formula: "Up to 10% of Basic+DA (private); 14% for Govt. Exempt u/s 80CCD(2)",
         taxNote: "Reduces employee taxable income; no tax for employer up to 10%/14%",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "Optional but highly tax-efficient. Available in both Old and New tax regime. No upper limit on employer contribution; only exemption is capped at 10%.",
       },
     ],
@@ -195,7 +195,7 @@ export const CATEGORIES = [
         base: "CTC %",
         formula: "40–50% of CTC or per grade band",
         taxNote: "Fully taxable; PF, Gratuity, Bonus base",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Minimum Basic must satisfy minimum wage laws. Generally kept ≥ minimum wage for the applicable state and skill category.",
       },
       {
@@ -204,7 +204,7 @@ export const CATEGORIES = [
         base: "Basic Salary or CPI Index",
         formula: "Govt: linked to AICPI; Private: usually nil or fixed %",
         taxNote: "Fully taxable; included in PF and Gratuity base",
-        states: { MH:"V",KA:"V",WB:"V",TN:"V",GJ:"V",AP:"V",TG:"V",KL:"V",MP:"V",OD:"V",DL:"V",HR:"V",PB:"V",UP:"V",RJ:"V",HP:"V",JH:"V",CH:"V",AS:"V",GO:"V",MN:"V",MG:"V",TR:"V",SK:"V",MZ:"V" },
+        states: { AN:"V", AP:"V", AR:"V", AS:"V", BR:"V", CH:"V", CG:"V", DN:"V", DL:"V", GA:"V", GJ:"V", HR:"V", HP:"V", JK:"V", JH:"V", KA:"V", KL:"V", LA:"V", LD:"V", MP:"V", MH:"V", MN:"V", ML:"V", MZ:"V", NL:"V", OD:"V", PY:"V", PB:"V", RJ:"V", SK:"V", TN:"V", TG:"V", TR:"V", UP:"V", UK:"V", WB:"V" },
         notes: "Mainly for government employees. Private companies often merge DA into Basic or ignore it entirely.",
       },
       {
@@ -213,7 +213,7 @@ export const CATEGORIES = [
         base: "Basic Salary",
         formula: "Metro: 50% of Basic; Non-metro: 40% of Basic (typical)",
         taxNote: "Partial exempt u/s 10(13A): min of (actual HRA, rent paid−10% Basic, 50%/40% of Basic)",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Metro cities (Delhi, Mumbai, Kolkata, Chennai): 50% exemption. All others: 40%. Employee must pay actual rent; if staying with family: no exemption. Landlord PAN needed if annual rent > ₹1 lakh.",
       },
       {
@@ -222,7 +222,7 @@ export const CATEGORIES = [
         base: "Actual Fare",
         formula: "Company provides fixed amount; exemption = actual fare (domestic; family; economy/AC1)",
         taxNote: "Exempt u/s 10(5); 2 journeys in 4-year block; unused exemption carries forward",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Central exemption rule; same in all states. Current block: 2022–2025. Only transport fares exempt (no hotel, food). Family = spouse, children (max 2 born after Oct 1998), dependent parents/siblings.",
       },
       {
@@ -231,7 +231,7 @@ export const CATEGORIES = [
         base: "Fixed amount",
         formula: "Fixed ₹1,250/month or per company policy",
         taxNote: "Fully taxable (post-2018); subsumed under Standard Deduction",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "The ₹15,000/year medical exemption was removed in 2018 and replaced by Standard Deduction. Now fully taxable.",
       },
       {
@@ -240,7 +240,7 @@ export const CATEGORIES = [
         base: "Fixed amount",
         formula: "Fixed ₹1,600/month or per company policy",
         taxNote: "Fully taxable (post-2018); subsumed under Standard Deduction",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "The ₹1,600/month exemption was removed in 2018; now taxable. Companies still pay as a component but it's taxable.",
       },
       {
@@ -249,7 +249,7 @@ export const CATEGORIES = [
         base: "Residual (CTC - other components)",
         formula: "Special = CTC - Basic - HRA - LTA - PF - Gratuity - all other fixed components",
         taxNote: "Fully taxable",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Balancing component; ensures CTC = total package. Most common way to flex the package.",
       },
       {
@@ -258,7 +258,7 @@ export const CATEGORIES = [
         base: "Grade + City tier",
         formula: "Fixed by HR policy; typically ₹500–₹3,000/month based on city tier",
         taxNote: "Fully taxable",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "Metro and Tier-1 cities get higher CCA. Companies in IT/ITES commonly pay this.",
       },
       {
@@ -267,7 +267,7 @@ export const CATEGORIES = [
         base: "Per child per month",
         formula: "₹100/child/month × max 2 children = max ₹2,400/year",
         taxNote: "Exempt u/s 10(14): ₹100/child/month; excess taxable",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "Exemption uniform across all states u/s 10(14). Hostel subsidy: ₹300/child/month (max 2). Combined max exempt = ₹2,400 + ₹7,200 = ₹9,600/year.",
       },
       {
@@ -276,7 +276,7 @@ export const CATEGORIES = [
         base: "Per shift or fixed",
         formula: "Fixed amount per night shift or percentage of daily wages",
         taxNote: "Fully taxable",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "More common in IT, BPO, manufacturing. Some states mandate premium for night shifts under state S&E Acts.",
       },
       {
@@ -285,7 +285,7 @@ export const CATEGORIES = [
         base: "Fixed / Grade based",
         formula: "Flat monthly rate depending on zone",
         taxNote: "Specific exemptions exist under Rule 2BB (e.g. ₹200-₹7,000/m depending on altitude/border area)",
-        states: { MH:"V",KA:"V",WB:"V",TN:"V",GJ:"V",AP:"V",TG:"V",KL:"V",MP:"V",OD:"V",DL:"V",HR:"V",PB:"V",UP:"V",RJ:"V",HP:"V",JH:"V",CH:"V",AS:"V",GO:"V",MN:"V",MG:"V",TR:"V",SK:"V",MZ:"V" },
+        states: { AN:"V", AP:"V", AR:"V", AS:"V", BR:"V", CH:"V", CG:"V", DN:"V", DL:"V", GA:"V", GJ:"V", HR:"V", HP:"V", JK:"V", JH:"V", KA:"V", KL:"V", LA:"V", LD:"V", MP:"V", MH:"V", MN:"V", ML:"V", MZ:"V", NL:"V", OD:"V", PY:"V", PB:"V", RJ:"V", SK:"V", TN:"V", TG:"V", TR:"V", UP:"V", UK:"V", WB:"V" },
         notes: "Relevant for infrastructure, telecom, military, or mining employees working under severe conditions."
       },
       {
@@ -294,7 +294,7 @@ export const CATEGORIES = [
         base: "Fixed",
         formula: "Flat monthly or annual rate",
         taxNote: "Exempt u/s 10(14) to the extent actually incurred on purchase/maintenance of uniform",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "Requires employee declarations that they actually spent the amount to claim the tax exemption."
       },
     ],
@@ -310,7 +310,7 @@ export const CATEGORIES = [
         base: "KPI, grade, company performance",
         formula: "% of Annual CTC × Achievement Factor; paid quarterly/annually",
         taxNote: "Fully taxable in year of receipt; ESI included if monthly",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "Tax relief u/s 89(1) if arrears of prior year. Separate from statutory bonus (Payment of Bonus Act).",
       },
       {
@@ -319,7 +319,7 @@ export const CATEGORIES = [
         base: "Ordinary hourly rate",
         formula: "2 × Ordinary Rate × OT hours (Factories Act); rate may differ under other Acts",
         taxNote: "Fully taxable; included in ESI gross",
-        states: { MH:"V",KA:"V",WB:"V",TN:"V",GJ:"V",AP:"V",TG:"V",KL:"V",MP:"V",OD:"V",DL:"V",HR:"V",PB:"V",UP:"V",RJ:"V",HP:"V",JH:"V",CH:"V",AS:"V",GO:"V",MN:"V",MG:"V",TR:"V",SK:"V",MZ:"V" },
+        states: { AN:"V", AP:"V", AR:"V", AS:"V", BR:"V", CH:"V", CG:"V", DN:"V", DL:"V", GA:"V", GJ:"V", HR:"V", HP:"V", JK:"V", JH:"V", KA:"V", KL:"V", LA:"V", LD:"V", MP:"V", MH:"V", MN:"V", ML:"V", MZ:"V", NL:"V", OD:"V", PY:"V", PB:"V", RJ:"V", SK:"V", TN:"V", TG:"V", TR:"V", UP:"V", UK:"V", WB:"V" },
         notes: "Factories Act mandates 2× rate. Shops & Establishments Acts vary by state. Some states (e.g., Maharashtra) have specific OT caps and records requirements.",
       },
       {
@@ -328,7 +328,7 @@ export const CATEGORIES = [
         base: "Monthly wages capped at ₹7,000 or min wage",
         formula: "Min 8.33% to Max 20% of annual eligible wages; based on allocable surplus",
         taxNote: "Fully taxable in year of receipt",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Uniform under Payment of Bonus Act 1965. Paid within 8 months of FY close. Eligibility: salary ≤ ₹21,000/month AND ≥ 30 working days in the year.",
       },
       {
@@ -337,7 +337,7 @@ export const CATEGORIES = [
         base: "Negotiated",
         formula: "One-time; often with clawback if resign within 1 year",
         taxNote: "Fully taxable; perquisite if clawback enforced",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "No statutory basis; purely company policy. Taxable in year of receipt.",
       },
       {
@@ -346,7 +346,7 @@ export const CATEGORIES = [
         base: "Revenue / Target generated",
         formula: "Percentage of total sales generated by employee",
         taxNote: "Fully taxable; forms part of 'Salary' for PF/HRA if fixed percentage of turnover",
-        states: { MH:"V",KA:"V",WB:"V",TN:"V",GJ:"V",AP:"V",TG:"V",KL:"V",MP:"V",OD:"V",DL:"V",HR:"V",PB:"V",UP:"V",RJ:"V",HP:"V",JH:"V",CH:"V",AS:"V",GO:"V",MN:"V",MG:"V",TR:"V",SK:"V",MZ:"V" },
+        states: { AN:"V", AP:"V", AR:"V", AS:"V", BR:"V", CH:"V", CG:"V", DN:"V", DL:"V", GA:"V", GJ:"V", HR:"V", HP:"V", JK:"V", JH:"V", KA:"V", KL:"V", LA:"V", LD:"V", MP:"V", MH:"V", MN:"V", ML:"V", MZ:"V", NL:"V", OD:"V", PY:"V", PB:"V", RJ:"V", SK:"V", TN:"V", TG:"V", TR:"V", UP:"V", UK:"V", WB:"V" },
         notes: "Common in sales roles. If structured as a fixed % of turnover achieved, courts often merge it with basic for statutory calculations."
       },
       {
@@ -355,7 +355,7 @@ export const CATEGORIES = [
         base: "Fixed amount based on tenure",
         formula: "Lump sum paid conditionally on completing tenure (e.g. 2 years)",
         taxNote: "Fully taxable in the year of receipt",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "Differs from Joining Bonus. Aimed at retaining key talent post acquisitions or during critical projects."
       },
     ],
@@ -371,7 +371,7 @@ export const CATEGORIES = [
         base: "Bills / logbook",
         formula: "Own car ≤1600cc: ₹1,800/month + ₹900 (driver); >1600cc: ₹2,400 + ₹900",
         taxNote: "Partially exempt per Rule 3(e); excess taxable as perquisite",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "Must be for official duty travel. Logbook/bills required. Same exemption amounts across all states.",
       },
       {
@@ -380,7 +380,7 @@ export const CATEGORIES = [
         base: "Actual bills",
         formula: "Actual telephone bills for official use; proportionate official use",
         taxNote: "Exempt for official use; taxable portion (personal use) added to gross",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "Uniform exemption rule. Bills required. Employer-owned mobile = perquisite (nil value if use restricted for official).",
       },
       {
@@ -389,7 +389,7 @@ export const CATEGORIES = [
         base: "Actual bills",
         formula: "Actual broadband bills for official use",
         taxNote: "Exempt for official use with bills",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "Became very common post-WFH (COVID). Employer to define policy on % official use.",
       },
       {
@@ -398,7 +398,7 @@ export const CATEGORIES = [
         base: "Actual bills",
         formula: "Actual expenditure on books/journals relevant to employment",
         taxNote: "Fully exempt if for official/professional purposes; bills required",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "Tax neutral across all states. Policy determines annual limit.",
       },
       {
@@ -407,7 +407,7 @@ export const CATEGORIES = [
         base: "Actual transport fare",
         formula: "Actual airfare/rail fare; economy/AC1 only; domestic; family defined under Act",
         taxNote: "Exempt u/s 10(5) per block rules; 2 exemptions per 4-year block",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "Current 4-year block: 2022–2025. Third journey in a block with encashment of LTA is allowed under certain conditions (LTC Cash Voucher Scheme).",
       },
       {
@@ -416,7 +416,7 @@ export const CATEGORIES = [
         base: "Per working day",
         formula: "₹50/meal × 2 meals × 22 working days = ₹2,200/month approx. (exempt limit)",
         taxNote: "Exempt if non-transferable, non-encashable meal vouchers; ₹50/meal limit",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "Common in IT and large companies. Amount > ₹50/meal is taxable as perquisite. Cash food allowance is fully taxable.",
       },
       {
@@ -425,7 +425,7 @@ export const CATEGORIES = [
         base: "Actual medical bills",
         formula: "Actual bills; up to company policy limit",
         taxNote: "Fully taxable post-2018 (merged with Standard Deduction); still common for employee welfare",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "While taxable, companies still reimburse as an employee benefit (not a tax saving now). Group mediclaim is separate and handled differently.",
       },
       {
@@ -434,7 +434,7 @@ export const CATEGORIES = [
         base: "Actual expenses",
         formula: "Actual reasonable relocation costs; some companies use grade-based fixed amounts",
         taxNote: "Exempt if for official transfer; taxable if moving to first job location",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "No fixed statutory limit. Tax treatment depends on whether transfer is initiated by employer.",
       },
     ],
@@ -450,7 +450,7 @@ export const CATEGORIES = [
         base: "Property type & City population",
         formula: "Metro (>25L): 15% of Salary. Tier 2: 10%. Tier 3: 7.5% (minus any rent recovered)",
         taxNote: "Taxable as a perquisite value added to gross; TDS is deducted on this notional value",
-        states: { MH:"V",KA:"V",WB:"V",TN:"V",GJ:"V",AP:"V",TG:"V",KL:"V",MP:"V",OD:"V",DL:"V",HR:"V",PB:"V",UP:"V",RJ:"V",HP:"V",JH:"V",CH:"V",AS:"V",GO:"V",MN:"V",MG:"V",TR:"V",SK:"V",MZ:"V" },
+        states: { AN:"V", AP:"V", AR:"V", AS:"V", BR:"V", CH:"V", CG:"V", DN:"V", DL:"V", GA:"V", GJ:"V", HR:"V", HP:"V", JK:"V", JH:"V", KA:"V", KL:"V", LA:"V", LD:"V", MP:"V", MH:"V", MN:"V", ML:"V", MZ:"V", NL:"V", OD:"V", PY:"V", PB:"V", RJ:"V", SK:"V", TN:"V", TG:"V", TR:"V", UP:"V", UK:"V", WB:"V" },
         notes: "This is a non-cash component. The calculated value increases taxable income but is not paid out in the bank transfer."
       },
       {
@@ -459,7 +459,7 @@ export const CATEGORIES = [
         base: "Engine CC & Driver provided",
         formula: "≤1.6L: ₹1,800/m (₹2,700 with driver). >1.6L engine: ₹2,400/m (₹3,300 with driver)",
         taxNote: "Taxable as a perquisite value added to gross; assumes personal+official mixed use",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "The notional value is added to calculate final TDS. Non-cash."
       },
       {
@@ -468,7 +468,7 @@ export const CATEGORIES = [
         base: "SBI Lending Rate differential",
         formula: "(SBI Rate for similar loan - Rate charged to employee) × Outstanding Principal",
         taxNote: "Perquisite value added to taxable income. Exempt if loan < ₹20,000 or for specified diseases.",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "Example: Company gives home loan at 4%. SBI rate is 9%. The 5% differential is taxed."
       },
       {
@@ -477,7 +477,7 @@ export const CATEGORIES = [
         base: "Basic Salary",
         formula: "Up to 15% of Basic salary contributed by Employer directly to trust",
         taxNote: "Exempt up to combined limit of ₹7.5 Lakh (EPF + NPS + Superannuation). Excess is taxable.",
-        states: { MH:"O",KA:"O",WB:"O",TN:"O",GJ:"O",AP:"O",TG:"O",KL:"O",MP:"O",OD:"O",DL:"O",HR:"O",PB:"O",UP:"O",RJ:"O",HP:"O",JH:"O",CH:"O",AS:"O",GO:"O",MN:"O",MG:"O",TR:"O",SK:"O",MZ:"O" },
+        states: { AN:"O", AP:"O", AR:"O", AS:"O", BR:"O", CH:"O", CG:"O", DN:"O", DL:"O", GA:"O", GJ:"O", HR:"O", HP:"O", JK:"O", JH:"O", KA:"O", KL:"O", LA:"O", LD:"O", MP:"O", MH:"O", MN:"O", ML:"O", MZ:"O", NL:"O", OD:"O", PY:"O", PB:"O", RJ:"O", SK:"O", TN:"O", TG:"O", TR:"O", UP:"O", UK:"O", WB:"O" },
         notes: "Retirement benefit aimed at senior management. Managed via LIC or company trusts."
       }
     ]
@@ -493,7 +493,7 @@ export const CATEGORIES = [
         base: "Last Basic + DA",
         formula: "(Last Basic+DA) / 26 × 15 × Completed Years; max ₹20 lakh",
         taxNote: "Exempt u/s 10(10); up to ₹20 lakh for non-govt; fully exempt for govt",
-        states: { MH:"M",KA:"M",WB:"M",TN:"M",GJ:"M",AP:"M",TG:"M",KL:"M",MP:"M",OD:"M",DL:"M",HR:"M",PB:"M",UP:"M",RJ:"M",HP:"M",JH:"M",CH:"M",AS:"M",GO:"M",MN:"M",MG:"M",TR:"M",SK:"M",MZ:"M" },
+        states: { AN:"M", AP:"M", AR:"M", AS:"M", BR:"M", CH:"M", CG:"M", DN:"M", DL:"M", GA:"M", GJ:"M", HR:"M", HP:"M", JK:"M", JH:"M", KA:"M", KL:"M", LA:"M", LD:"M", MP:"M", MH:"M", MN:"M", ML:"M", MZ:"M", NL:"M", OD:"M", PY:"M", PB:"M", RJ:"M", SK:"M", TN:"M", TG:"M", TR:"M", UP:"M", UK:"M", WB:"M" },
         notes: "Eligible if ≥5 years continuous service (death/disability: no minimum). Some states interpret '240 days = 1 year' differently. Karnataka: 240 days in any 12-month period.",
       },
       {
@@ -502,7 +502,7 @@ export const CATEGORIES = [
         base: "Basic + DA (typically)",
         formula: "Daily rate × EL days encashed; Daily rate = (Basic+DA)/26",
         taxNote: "Fully taxable during service; no exemption",
-        states: { MH:"C",KA:"C",WB:"C",TN:"C",GJ:"C",AP:"C",TG:"C",KL:"C",MP:"C",OD:"C",DL:"C",HR:"C",PB:"C",UP:"C",RJ:"C",HP:"C",JH:"C",CH:"C",AS:"C",GO:"C",MN:"C",MG:"C",TR:"C",SK:"C",MZ:"C" },
+        states: { AN:"C", AP:"C", AR:"C", AS:"C", BR:"C", CH:"C", CG:"C", DN:"C", DL:"C", GA:"C", GJ:"C", HR:"C", HP:"C", JK:"C", JH:"C", KA:"C", KL:"C", LA:"C", LD:"C", MP:"C", MH:"C", MN:"C", ML:"C", MZ:"C", NL:"C", OD:"C", PY:"C", PB:"C", RJ:"C", SK:"C", TN:"C", TG:"C", TR:"C", UP:"C", UK:"C", WB:"C" },
         notes: "Taxable during employment. At retirement: exempt up to ₹25 lakh u/s 10(10AA). State S&E Acts vary on max EL accumulation.",
       },
       {
@@ -511,7 +511,7 @@ export const CATEGORIES = [
         base: "Gross monthly salary",
         formula: "Gross Salary × Notice Days / 30 (paid by employer or recovered from employee)",
         taxNote: "Taxable when received by employee; recovery from employee not deductible",
-        states: { MH:"C",KA:"C",WB:"C",TN:"C",GJ:"C",AP:"C",TG:"C",KL:"C",MP:"C",OD:"C",DL:"C",HR:"C",PB:"C",UP:"C",RJ:"C",HP:"C",JH:"C",CH:"C",AS:"C",GO:"C",MN:"C",MG:"C",TR:"C",SK:"C",MZ:"C" },
+        states: { AN:"C", AP:"C", AR:"C", AS:"C", BR:"C", CH:"C", CG:"C", DN:"C", DL:"C", GA:"C", GJ:"C", HR:"C", HP:"C", JK:"C", JH:"C", KA:"C", KL:"C", LA:"C", LD:"C", MP:"C", MH:"C", MN:"C", ML:"C", MZ:"C", NL:"C", OD:"C", PY:"C", PB:"C", RJ:"C", SK:"C", TN:"C", TG:"C", TR:"C", UP:"C", UK:"C", WB:"C" },
         notes: "State S&E Acts specify minimum notice requirements. Notice period and buyout terms in offer letter prevail for professional-grade staff.",
       },
       {
@@ -520,7 +520,7 @@ export const CATEGORIES = [
         base: "Last drawn salary × service",
         formula: "3 months' salary for each completed year of service, or salary × remaining service months; whichever is lower",
         taxNote: "Exempt u/s 10(10C) up to ₹5 lakh (if scheme complies with Rule 2BA)",
-        states: { MH:"C",KA:"C",WB:"C",TN:"C",GJ:"C",AP:"C",TG:"C",KL:"C",MP:"C",OD:"C",DL:"C",HR:"C",PB:"C",UP:"C",RJ:"C",HP:"C",JH:"C",CH:"C",AS:"C",GO:"C",MN:"C",MG:"C",TR:"C",SK:"C",MZ:"C" },
+        states: { AN:"C", AP:"C", AR:"C", AS:"C", BR:"C", CH:"C", CG:"C", DN:"C", DL:"C", GA:"C", GJ:"C", HR:"C", HP:"C", JK:"C", JH:"C", KA:"C", KL:"C", LA:"C", LD:"C", MP:"C", MH:"C", MN:"C", ML:"C", MZ:"C", NL:"C", OD:"C", PY:"C", PB:"C", RJ:"C", SK:"C", TN:"C", TG:"C", TR:"C", UP:"C", UK:"C", WB:"C" },
         notes: "Must be ≥40 years age or 10 years service. Scheme must be approved by Commissioner of Income Tax. Exempt only once in lifetime.",
       },
       {
@@ -529,7 +529,7 @@ export const CATEGORIES = [
         base: "FMV at exercise/vesting - exercise price",
         formula: "Perquisite Value = (FMV on exercise date - Exercise Price) × Shares",
         taxNote: "Taxable as perquisite in the year of exercise/vesting; TDS required",
-        states: { MH:"C",KA:"C",WB:"C",TN:"C",GJ:"C",AP:"C",TG:"C",KL:"C",MP:"C",OD:"C",DL:"C",HR:"C",PB:"C",UP:"C",RJ:"C",HP:"C",JH:"C",CH:"C",AS:"C",GO:"C",MN:"C",MG:"C",TR:"C",SK:"C",MZ:"C" },
+        states: { AN:"C", AP:"C", AR:"C", AS:"C", BR:"C", CH:"C", CG:"C", DN:"C", DL:"C", GA:"C", GJ:"C", HR:"C", HP:"C", JK:"C", JH:"C", KA:"C", KL:"C", LA:"C", LD:"C", MP:"C", MH:"C", MN:"C", ML:"C", MZ:"C", NL:"C", OD:"C", PY:"C", PB:"C", RJ:"C", SK:"C", TN:"C", TG:"C", TR:"C", UP:"C", UK:"C", WB:"C" },
         notes: "SEBI-registered company: FMV as per stock exchange. Unlisted company: FMV as per merchant banker report. Startup deferral option: TDS at exercise or sale.",
       },
       {
@@ -538,7 +538,7 @@ export const CATEGORIES = [
         base: "Revised salary - Old salary",
         formula: "Diff per month × Number of months in arrear period",
         taxNote: "Taxable; claim relief u/s 89(1) via Form 10E for prior-year arrears",
-        states: { MH:"C",KA:"C",WB:"C",TN:"C",GJ:"C",AP:"C",TG:"C",KL:"C",MP:"C",OD:"C",DL:"C",HR:"C",PB:"C",UP:"C",RJ:"C",HP:"C",JH:"C",CH:"C",AS:"C",GO:"C",MN:"C",MG:"C",TR:"C",SK:"C",MZ:"C" },
+        states: { AN:"C", AP:"C", AR:"C", AS:"C", BR:"C", CH:"C", CG:"C", DN:"C", DL:"C", GA:"C", GJ:"C", HR:"C", HP:"C", JK:"C", JH:"C", KA:"C", KL:"C", LA:"C", LD:"C", MP:"C", MH:"C", MN:"C", ML:"C", MZ:"C", NL:"C", OD:"C", PY:"C", PB:"C", RJ:"C", SK:"C", TN:"C", TG:"C", TR:"C", UP:"C", UK:"C", WB:"C" },
         notes: "Form 10E must be filed BEFORE filing ITR to claim relief. Relief is computed on 'spread-back' method.",
       },
       {
@@ -547,7 +547,7 @@ export const CATEGORIES = [
         base: "Continuous Service (15 days/year)",
         formula: "15 days average pay × Continuous years (or part thereof > 6 months)",
         taxNote: "Exempt u/s 10(10B) up to ₹5,00,000. Balance is fully taxable.",
-        states: { MH:"C",KA:"C",WB:"C",TN:"C",GJ:"C",AP:"C",TG:"C",KL:"C",MP:"C",OD:"C",DL:"C",HR:"C",PB:"C",UP:"C",RJ:"C",HP:"C",JH:"C",CH:"C",AS:"C",GO:"C",MN:"C",MG:"C",TR:"C",SK:"C",MZ:"C" },
+        states: { AN:"C", AP:"C", AR:"C", AS:"C", BR:"C", CH:"C", CG:"C", DN:"C", DL:"C", GA:"C", GJ:"C", HR:"C", HP:"C", JK:"C", JH:"C", KA:"C", KL:"C", LA:"C", LD:"C", MP:"C", MH:"C", MN:"C", ML:"C", MZ:"C", NL:"C", OD:"C", PY:"C", PB:"C", RJ:"C", SK:"C", TN:"C", TG:"C", TR:"C", UP:"C", UK:"C", WB:"C" },
         notes: "Triggered during layoffs/closure. Governed by Industrial Disputes Act. Requires distinct tax proof."
       },
       {
@@ -556,7 +556,7 @@ export const CATEGORIES = [
         base: "Total original bonus",
         formula: "100% or prorated reversal of joining bonus if employee resigns within lock-in",
         taxNote: "Complex tax implication. Usually deducted from Net Pay (post-tax) unless recovered in same FY.",
-        states: { MH:"C",KA:"C",WB:"C",TN:"C",GJ:"C",AP:"C",TG:"C",KL:"C",MP:"C",OD:"C",DL:"C",HR:"C",PB:"C",UP:"C",RJ:"C",HP:"C",JH:"C",CH:"C",AS:"C",GO:"C",MN:"C",MG:"C",TR:"C",SK:"C",MZ:"C" },
+        states: { AN:"C", AP:"C", AR:"C", AS:"C", BR:"C", CH:"C", CG:"C", DN:"C", DL:"C", GA:"C", GJ:"C", HR:"C", HP:"C", JK:"C", JH:"C", KA:"C", KL:"C", LA:"C", LD:"C", MP:"C", MH:"C", MN:"C", ML:"C", MZ:"C", NL:"C", OD:"C", PY:"C", PB:"C", RJ:"C", SK:"C", TN:"C", TG:"C", TR:"C", UP:"C", UK:"C", WB:"C" },
         notes: "If recovered in a subsequent financial year, the employee has already paid tax on it originally, leading to potential loss unless revised ITR is filed."
       },
     ],

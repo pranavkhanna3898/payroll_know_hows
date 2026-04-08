@@ -1,103 +1,41 @@
 export const LWF_DETAILS = {
-  MH: { 
-    freq: "Semi-annual (June & December)", 
-    slabs: [
-      { range: "All Employees (Wage ≤ ₹3,000)", emp: "₹6", er: "₹18" },
-      { range: "All Employees (Wage > ₹3,000)", emp: "₹12", er: "₹36" }
-    ] 
-  },
-  KA: { 
-    freq: "Annual (January)", 
-    slabs: [
-      { range: "All Employees", emp: "₹20", er: "₹40" }
-    ] 
-  },
-  WB: { 
-    freq: "Semi-annual (June & December)", 
-    slabs: [
-      { range: "All Employees", emp: "₹3", er: "₹15" }
-    ] 
-  },
-  TN: { 
-    freq: "Annual (January)", 
-    slabs: [
-      { range: "All Employees", emp: "₹20", er: "₹40" }
-    ] 
-  },
-  GJ: { 
-    freq: "Semi-annual (June & December)", 
-    slabs: [
-      { range: "All Employees", emp: "₹6", er: "₹12" }
-    ] 
-  },
-  AP: { 
-    freq: "Annual (December)", 
-    slabs: [
-      { range: "All Employees", emp: "₹30", er: "₹70" }
-    ] 
-  },
-  TG: { 
-    freq: "Annual (December)", 
-    slabs: [
-      { range: "All Employees", emp: "₹30", er: "₹70" }
-    ] 
-  },
-  KL: { 
-    freq: "Monthly", 
-    slabs: [
-      { range: "All Employees", emp: "₹45", er: "₹45" }
-    ] 
-  },
-  MP: { 
-    freq: "Semi-annual (June & December)", 
-    slabs: [
-      { range: "All Employees", emp: "₹10", er: "₹30" }
-    ] 
-  },
-  OD: { 
-    freq: "Semi-annual (June & December)", 
-    slabs: [
-      { range: "All Employees", emp: "₹10", er: "₹20" }
-    ] 
-  },
-  DL: { 
-    freq: "Semi-annual (June & December)", 
-    slabs: [
-      { range: "All Employees", emp: "₹0.75", er: "₹2.25" }
-    ] 
-  },
-  HR: { 
-    freq: "Monthly", 
-    slabs: [
-      { range: "All Employees", emp: "0.2% of salary (max ₹31)", er: "0.4% of salary (max ₹62)" }
-    ] 
-  },
-  PB: { 
-    freq: "Monthly", 
-    slabs: [
-      { range: "All Employees", emp: "0.2% of salary (max ₹31)", er: "0.4% of salary (max ₹62)" }
-    ] 
-  },
-  UP: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
-  RJ: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
-  HP: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
-  JH: { 
-    freq: "Monthly", 
-    slabs: [
-      { range: "All Employees", emp: "₹5", er: "₹15" }
-    ] 
-  },
-  CH: { 
-    freq: "Monthly", 
-    slabs: [
-      { range: "All Employees", emp: "₹5", er: "₹20" }
-    ] 
-  },
+  // Applicable States
+  MH: { freq: "Semi-annual (June & December)", slabs: [{ range: "All Employees (Wage ≤ ₹3,000)", emp: "₹6", er: "₹18" }, { range: "All Employees (Wage > ₹3,000)", emp: "₹12", er: "₹36" }] },
+  KA: { freq: "Annual (January)", slabs: [{ range: "All Employees", emp: "₹20", er: "₹40" }] },
+  WB: { freq: "Semi-annual (June & December)", slabs: [{ range: "All Employees", emp: "₹3", er: "₹15" }] },
+  TN: { freq: "Annual (January)", slabs: [{ range: "All Employees", emp: "₹20", er: "₹40" }] },
+  GJ: { freq: "Semi-annual (June & December)", slabs: [{ range: "All Employees", emp: "₹6", er: "₹12" }] },
+  AP: { freq: "Annual (December)", slabs: [{ range: "All Employees", emp: "₹30", er: "₹70" }] },
+  TG: { freq: "Annual (December)", slabs: [{ range: "All Employees", emp: "₹30", er: "₹70" }] },
+  KL: { freq: "Monthly", slabs: [{ range: "All Employees", emp: "₹45", er: "₹45" }] },
+  MP: { freq: "Semi-annual (June & December)", slabs: [{ range: "All Employees", emp: "₹10", er: "₹30" }] },
+  OD: { freq: "Semi-annual (June & December)", slabs: [{ range: "All Employees", emp: "₹10", er: "₹20" }] },
+  DL: { freq: "Semi-annual (June & December)", slabs: [{ range: "All Employees", emp: "₹0.75", er: "₹2.25" }] },
+  HR: { freq: "Monthly", slabs: [{ range: "All Employees", emp: "0.2% of salary (max ₹31)", er: "0.4% of salary (max ₹62)" }] },
+  PB: { freq: "Monthly", slabs: [{ range: "All Employees", emp: "0.2% of salary (max ₹31)", er: "0.4% of salary (max ₹62)" }] },
+  JH: { freq: "Monthly", slabs: [{ range: "All Employees", emp: "₹5", er: "₹15" }] },
+  CH: { freq: "Monthly", slabs: [{ range: "All Employees", emp: "₹5", er: "₹20" }] },
+  CG: { freq: "Semi-annual (June & December)", slabs: [{ range: "All Employees", emp: "₹15", er: "₹45" }] },
+  GA: { freq: "Monthly", slabs: [{ range: "All Employees", emp: "₹60", er: "₹180" }] },
+
+  // Not Applicable
+  AN: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  AR: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
   AS: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
-  GO: { 
-    freq: "Monthly", 
-    slabs: [
-      { range: "All Employees", emp: "₹60", er: "₹180" }
-    ] 
-  },
+  BR: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  DN: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  HP: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  JK: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  LA: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  LD: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  ML: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  MN: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  MZ: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  NL: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  PY: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  RJ: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  SK: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  TR: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  UP: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
+  UK: { freq: "N/A", slabs: [{ range: "Not Applicable", emp: "N/A", er: "N/A" }] },
 };
