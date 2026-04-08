@@ -2,8 +2,9 @@ import React from 'react';
 
 export default function Step1_Salary({ state }) {
   const {
-    ctc, daysInMonth, lopDays, overtimeHours, otRate, arrears,
-    updateData, basic, hra, special, overtimePay, grossSalary
+    daysInMonth, lopDays, overtimeHours, otRate, arrears,
+    updateData, standardBasic, standardHRA, standardSpecial,
+    basic, hra, special, overtimePay, grossSalary, attendanceFactor
   } = state;
 
   return (
@@ -16,8 +17,8 @@ export default function Step1_Salary({ state }) {
       <div className="sim-card-body">
         <div className="sim-input-grid">
           <div className="sim-input-group">
-            <label>Annual CTC (₹)</label>
-            <input type="number" value={ctc} onChange={(e) => updateData('ctc', e.target.value)} />
+            <label>Base Monthly Gross (Step 0)</label>
+            <input type="number" value={standardBasic + standardHRA + standardSpecial} disabled style={{background: '#f1f5f9'}} />
           </div>
           <div className="sim-input-group">
             <label>Days in Month</label>
@@ -42,7 +43,11 @@ export default function Step1_Salary({ state }) {
         </div>
 
         <div className="sim-output-box">
-          <h4>Computed Gross Breakdown</h4>
+          <h4>Calculation: Attendance Proration & Gross</h4>
+          <div className="code-content" style={{background: 'transparent', padding: '0 0 10px', color: '#475569', fontSize: 12}}>
+             Attendance Factor = (Days - LOP) / Days <br/>
+             → ({daysInMonth} - {lopDays}) / {daysInMonth} = {attendanceFactor.toFixed(4)} Multiplier
+          </div>
           <div className="sim-line-item">
             <span>Basic (Prorated):</span>
             <span>₹ {basic.toLocaleString(undefined, {maximumFractionDigits: 2})}</span>

@@ -18,7 +18,12 @@ export default function Step3_NetPay({ state }) {
         </div>
 
         <div className="sim-output-box">
-          <h4>Deductions Breakdown</h4>
+          <h4>Calculation: Statutory Deductions & Net Pay</h4>
+          <div className="code-content" style={{background: 'transparent', padding: '0 0 10px', color: '#475569', fontSize: 12}}>
+             PF Output = MIN(1800, Basic {Math.round(basic).toLocaleString()} * 12%)<br/>
+             ESI Output = If Gross {Math.round(grossSalary).toLocaleString()} &le; 21000 then (Gross * 0.75%) else 0<br/>
+             Net Pay = Gross - (PF + ESI + PT + LWF + Monthly TDS)
+          </div>
           <div className="sim-line-item">
             <span>Provident Fund (PF) Employee Share (12% of Basic):</span>
             <span>- ₹ {pfEmployee.toLocaleString(undefined, {maximumFractionDigits: 2})}</span>

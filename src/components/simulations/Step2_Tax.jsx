@@ -3,7 +3,7 @@ import React from 'react';
 export default function Step2_Tax({ state }) {
   const {
     investments80C, medical80D, hraExempt, tdsDeductedSoFar, monthsRemaining,
-    updateData, grossSalary, taxableIncome, annualTax, tds
+    updateData, grossSalary, taxableIncome, annualTax, tds, taxFormulaDetail
   } = state;
 
   return (
@@ -42,7 +42,13 @@ export default function Step2_Tax({ state }) {
         </div>
 
         <div className="sim-output-box">
-          <h4>Tax Projection Breakdown</h4>
+          <h4>Calculation: Taxable Income & Tax Formula</h4>
+          <div className="code-content" style={{background: 'transparent', padding: '0 0 10px', color: '#475569', fontSize: 12}}>
+             Annual Gross Est = (Monthly Gross {Math.round(grossSalary).toLocaleString()} * 11) + {Math.round(grossSalary).toLocaleString()} <br/>
+             Net Taxable = Annual Gross - 80C - 80D - HRA Exempt - 50,000 (Std Ded)<br/>
+             Tax Formula: <span style={{fontWeight: 700}}>{taxFormulaDetail}</span><br/>
+             Monthly TDS = (Annual Tax - Deducted So Far) / Remaining Months
+          </div>
           <div className="sim-line-item">
             <span>Projected Net Taxable Income:</span>
             <span>₹ {taxableIncome.toLocaleString(undefined, {maximumFractionDigits: 2})}</span>

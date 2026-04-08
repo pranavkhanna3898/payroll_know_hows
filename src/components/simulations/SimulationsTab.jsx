@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Step0_SalaryBreakdown from './Step0_SalaryBreakdown';
 import Step1_Salary from './Step1_Salary';
 import Step2_Tax from './Step2_Tax';
 import Step3_NetPay from './Step3_NetPay';
@@ -8,9 +9,9 @@ import Step5_Statutory from './Step5_Statutory';
 export default function SimulationsTab() {
   const [data, setData] = useState({
     // Step 1 Inputs
-    ctc: 600000,
-    basicPct: 50,
-    hraPct: 40,
+    monthlyBasic: 25000,
+    monthlyHRA: 10000,
+    monthlySpecial: 15000,
     daysInMonth: 30,
     lopDays: 0,
     overtimeHours: 0,
@@ -37,10 +38,10 @@ export default function SimulationsTab() {
   };
 
   // Shared derived calculations
-  const monthlyCTC = data.ctc / 12;
-  const standardBasic = monthlyCTC * (data.basicPct / 100);
-  const standardHRA = standardBasic * (data.hraPct / 100);
-  const standardSpecial = monthlyCTC - standardBasic - standardHRA;
+  const standardBasic = data.monthlyBasic;
+  const standardHRA = data.monthlyHRA;
+  const standardSpecial = data.monthlySpecial;
+  const monthlyCTC = standardBasic + standardHRA + standardSpecial;
 
   const attendanceFactor = Math.max(0, (data.daysInMonth - data.lopDays) / data.daysInMonth);
   const basic = standardBasic * attendanceFactor;
@@ -56,13 +57,21 @@ export default function SimulationsTab() {
   const taxableIncome = Math.max(0, annualGross - total80C - data.medical80D - data.hraExempt - 50000); 
   
   let annualTax = 0;
+  let taxFormulaDetail = "0";
+
   if (taxableIncome > 1000000) {
     annualTax = 112500 + ((taxableIncome - 1000000) * 0.3);
+    taxFormulaDetail = `112,500 + ((${taxableIncome} - 1,000,000) * 30%) = ${annualTax}`;
   } else if (taxableIncome > 500000) {
     annualTax = 12500 + ((taxableIncome - 500000) * 0.2);
+    taxFormulaDetail = `12,500 + ((${taxableIncome} - 500,000) * 20%) = ${annualTax}`;
   } else if (taxableIncome > 250000) {
     annualTax = (taxableIncome - 250000) * 0.05;
-    if (taxableIncome <= 500000) annualTax = 0; // standard rebate
+    taxFormulaDetail = `(${taxableIncome} - 250,000) * 5% = ${annualTax}`;
+    if (taxableIncome <= 500000) {
+       annualTax = 0; // standard rebate
+       taxFormulaDetail = `${taxFormulaDetail} -> Rebate u/s 87A applies -> 0`;
+    }
   }
   
   const remainingTax = Math.max(0, annualTax - data.tdsDeductedSoFar);
@@ -86,7 +95,7 @@ export default function SimulationsTab() {
     basic, hra, special, overtimePay, grossSalary, attendanceFactor,
     taxableIncome, annualTax, tds,
     pfEmployee, pfEmployer, esiEmployee, esiEmployer, pt, lwf,
-    totalDeductions, netPay
+    totalDeductions, netPay, taxFormulaDetail
   };
 
   return (
@@ -99,6 +108,8 @@ export default function SimulationsTab() {
       </div>
 
       <div className="pipeline-steps">
+        <Step0_SalaryBreakdown state={simState} />
+        <div className="pipeline-arrow">⬇</div>
         <Step1_Salary state={simState} />
         <div className="pipeline-arrow">⬇</div>
         <Step2_Tax state={simState} />
