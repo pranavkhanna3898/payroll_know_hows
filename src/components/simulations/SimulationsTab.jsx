@@ -73,7 +73,7 @@ export default function SimulationsTab() {
   const addArrearEntry = () => {
     setData(prev => ({
       ...prev,
-      arrearEntries: [...prev.arrearEntries, { id: Date.now().toString(), monthDays: 30, arrearDays: 0 }]
+      arrearEntries: [...prev.arrearEntries, { id: Date.now().toString(), monthName: 'January', monthDays: 31, historicalGross: 0, arrearDays: 0 }]
     }));
   };
 
@@ -128,7 +128,8 @@ export default function SimulationsTab() {
 
   let arrearsPay = 0;
   data.arrearEntries.forEach(entry => {
-    arrearsPay += (standardGross / entry.monthDays) * entry.arrearDays;
+    const baseToUse = entry.historicalGross || standardGross;
+    arrearsPay += (baseToUse / entry.monthDays) * entry.arrearDays;
   });
   
   const grossSalary = basic + hra + special + overtimePay + arrearsPay + leaveEncashmentPay + variablePay;
@@ -192,7 +193,7 @@ export default function SimulationsTab() {
   const tds = data.monthsRemaining > 0 ? (remainingTax / data.monthsRemaining) : 0;
 
   // Deductions
-  const pfEmployee = Math.min(1800, basic * 0.12);
+  const pfEmployee = Math.min(1800 * attendanceFactor, basic * 0.12);
   const pfEmployer = pfEmployee; 
   const esiEmployee = grossSalary <= 21000 ? grossSalary * 0.0075 : 0;
   const esiEmployer = grossSalary <= 21000 ? grossSalary * 0.0325 : 0;
@@ -204,7 +205,7 @@ export default function SimulationsTab() {
 
   const simState = {
     ...data,
-    updateData, updateComponent, addComponent, removeComponent, addArrearEntry, updateArrearEntry, removeArrearEntry,
+    setData, updateData, updateComponent, addComponent, removeComponent, addArrearEntry, updateArrearEntry, removeArrearEntry,
     standardBasic, standardHRA, standardSpecial, monthlyReimbursements, employerContribs, employeeDeductions, variableTarget, variablePay,
     basic, hra, special, overtimePay, arrearsPay, leaveEncashmentPay, grossSalary, attendanceFactor,
     taxableIncome, annualTax, tds,

@@ -75,18 +75,40 @@ export default function Step1_Salary({ state }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {arrearEntries.map(entry => (
                 <div key={entry.id} style={{ display: 'flex', gap: 12, alignItems: 'flex-end' }}>
-                  <div className="sim-input-group" style={{ flex: 1, margin: 0 }}>
+                  <div className="sim-input-group" style={{ flex: 1.5, margin: 0 }}>
                      <label style={{marginBottom: 4}}>Historical Month Baseline</label>
-                     <select value={entry.monthDays} onChange={(e) => updateArrearEntry(entry.id, 'monthDays', e.target.value)} style={{ padding: '8px', border: '1px solid #cbd5e1', borderRadius: 6, background: '#fff', fontSize: 13 }}>
-                       <option value={31}>Jan/Mar/May/Jul/Aug/Oct/Dec (31 Days)</option>
-                       <option value={30}>Apr/Jun/Sep/Nov (30 Days)</option>
-                       <option value={28}>Feb - Regular (28 Days)</option>
-                       <option value={29}>Feb - Leap (29 Days)</option>
+                     <select 
+                       value={entry.monthName || 'January'} 
+                       onChange={(e) => {
+                         const val = e.target.value;
+                         const daysMap = {
+                           'January': 31, 'February (Regular)': 28, 'February (Leap)': 29, 'March': 31,
+                           'April': 30, 'May': 31, 'June': 30, 'July': 31, 'August': 31,
+                           'September': 30, 'October': 31, 'November': 30, 'December': 31
+                         };
+                         updateArrearEntry(entry.id, 'monthName', val);
+                         // Small hack to ensure monthDays updates simultaneously without modifying simState signature
+                         setTimeout(() => updateArrearEntry(entry.id, 'monthDays', daysMap[val] || 30), 0);
+                       }} 
+                       style={{ padding: '8px', border: '1px solid #cbd5e1', borderRadius: 6, background: '#fff', fontSize: 13, width: '100%' }}>
+                       {['January', 'February (Regular)', 'February (Leap)', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map(m => (
+                         <option key={m} value={m}>{m}</option>
+                       ))}
                      </select>
                   </div>
                   <div className="sim-input-group" style={{ flex: 1, margin: 0 }}>
+                     <label style={{marginBottom: 4}}>Historical Gross</label>
+                     <input 
+                       type="number" 
+                       placeholder={`Current: ${standardGross}`}
+                       value={entry.historicalGross || ''} 
+                       onChange={(e) => updateArrearEntry(entry.id, 'historicalGross', e.target.value)} 
+                       style={{margin: 0, width: '100%', boxSizing: 'border-box'}} 
+                     />
+                  </div>
+                  <div className="sim-input-group" style={{ flex: 1, margin: 0 }}>
                      <label style={{marginBottom: 4}}>Payable Arrear Days</label>
-                     <input type="number" value={entry.arrearDays} onChange={(e) => updateArrearEntry(entry.id, 'arrearDays', e.target.value)} style={{margin: 0}} />
+                     <input type="number" value={entry.arrearDays} onChange={(e) => updateArrearEntry(entry.id, 'arrearDays', e.target.value)} style={{margin: 0, width: '100%', boxSizing: 'border-box'}} />
                   </div>
                   <button onClick={() => removeArrearEntry(entry.id)} style={{ background: '#fee2e2', color: '#ef4444', border: 'none', height: 35, width: 35, borderRadius: 6, cursor: 'pointer' }}>✕</button>
                 </div>
