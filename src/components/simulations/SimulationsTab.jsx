@@ -81,7 +81,7 @@ export default function SimulationsTab() {
     setData(prev => ({
       ...prev,
       arrearEntries: prev.arrearEntries.map(a => 
-        a.id === id ? { ...a, [field]: Number(value) } : a
+        a.id === id ? { ...a, [field]: field === 'monthName' ? value : Number(value) } : a
       )
     }));
   };
