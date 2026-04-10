@@ -5,6 +5,9 @@ import Step2_Tax from './Step2_Tax';
 import Step3_NetPay from './Step3_NetPay';
 import Step4_BankFile from './Step4_BankFile';
 import Step5_Statutory from './Step5_Statutory';
+import { CATEGORIES } from '../../data/categories';
+
+const MATRIX_COMPONENTS = CATEGORIES.flatMap(cat => cat.components);
 
 export default function SimulationsTab() {
   const [data, setData] = useState({
@@ -23,6 +26,9 @@ export default function SimulationsTab() {
     otRate: 500,
     leaveEncashmentDays: 0,
     arrearEntries: [],
+
+    selectedState: 'KA',
+    selectedCity: '',
 
     taxRegime: "new",
     investments80C: 0,
@@ -131,6 +137,9 @@ export default function SimulationsTab() {
   });
 
   let manualEpfInput = 0;
+  let manualPtInput = 0;
+  let manualLwfInput = 0;
+  let manualEsiInput = 0;
 
   // Final Accumulation using resolved values
   data.salaryComponents.forEach(c => {
@@ -145,7 +154,12 @@ export default function SimulationsTab() {
              if (val > 0) manualEpfInput = val; 
         }
     }
-    else if (c.type === 'employee_deduction') employeeDeductions += val;
+    else if (c.type === 'employee_deduction') {
+        employeeDeductions += val;
+        if (c.matrixId === 'pt' && val > 0) manualPtInput = val;
+        if (c.matrixId === 'lwf_ee' && val > 0) manualLwfInput = val;
+        if (c.matrixId === 'esi_ee' && val > 0) manualEsiInput = val;
+    }
     else if (c.type === 'variable') {
       variableTarget += val;
       variablePay += (c.currentPayout || 0);
@@ -260,10 +274,54 @@ export default function SimulationsTab() {
   }
   
   const pfEmployer = pfEmployee;  
-  const esiEmployee = grossSalary <= 21000 ? grossSalary * 0.0075 : 0;
+  const esiEmployee = manualEsiInput > 0 ? manualEsiInput : (grossSalary <= 21000 ? grossSalary * 0.0075 : 0);
   const esiEmployer = grossSalary <= 21000 ? grossSalary * 0.0325 : 0;
-  const pt = 200; 
-  const lwf = 25; 
+  
+  // Dynamic State Mathematics For PT and LWF
+  let pt = 0;
+  if (manualPtInput > 0) {
+    pt = manualPtInput;
+  } else {
+    // Check MATRIX to see if PT is strictly forbidden
+    const ptMatrix = MATRIX_COMPONENTS.find(c => c.id === 'pt');
+    if (ptMatrix && ptMatrix.states && ptMatrix.states[data.selectedState] === 'N') {
+      pt = 0;
+    } else {
+      // Dynamic Slabs based on grossSalary and State
+      const st = data.selectedState;
+      if (st === 'KA') pt = grossSalary >= 25000 ? 200 : 0;
+      else if (st === 'MH') pt = grossSalary >= 10000 ? 200 : (grossSalary >= 7500 ? 175 : 0); // Approx
+      else if (st === 'WB') pt = grossSalary > 40000 ? 200 : (grossSalary > 25000 ? 150 : (grossSalary > 15000 ? 130 : 0));
+      else if (st === 'TN') pt = 208; // 1250/6 half-yearly amortized
+      else if (st === 'GJ') pt = grossSalary >= 12000 ? 200 : 0;
+      else if (st === 'AP' || st === 'TG') pt = grossSalary > 20000 ? 200 : (grossSalary > 15000 ? 150 : 0);
+      else if (st === 'MP') pt = grossSalary > 40000 ? 208 : (grossSalary > 30000 ? 150 : 0);
+      else if (st === 'OD') pt = grossSalary > 40000 ? 200 : (grossSalary > 25000 ? 150 : 0);
+      else if (st === 'JH') pt = grossSalary > 60000 ? 208 : (grossSalary > 40000 ? 150 : 0);
+      else if (st === 'AS') pt = grossSalary > 25000 ? 208 : 0;
+      else pt = 200; // Generic fallback for other applicable
+    }
+  }
+
+  let lwf = 0;
+  if (manualLwfInput > 0) {
+    lwf = manualLwfInput;
+  } else {
+    // Check MATRIX to see if LWF is strictly forbidden
+    const lwfMatrix = MATRIX_COMPONENTS.find(c => c.id === 'lwf_ee');
+    if (lwfMatrix && lwfMatrix.states && lwfMatrix.states[data.selectedState] === 'N') {
+      lwf = 0;
+    } else {
+      const st = data.selectedState;
+      if (st === 'KA') lwf = 20;
+      else if (st === 'MH') lwf = 12; // 12 twice a year? Monthly averaged
+      else if (st === 'WB') lwf = 3;
+      else if (st === 'TN') lwf = 20;
+      else if (st === 'GJ') lwf = 6;
+      else if (st === 'AP' || st === 'TG') lwf = 30; // 30 per year
+      else lwf = 25; // Standard generic payload
+    }
+  }
   
   const totalDeductions = pfEmployee + esiEmployee + pt + lwf + tds + employeeDeductions;
   const netPay = grossSalary - totalDeductions;

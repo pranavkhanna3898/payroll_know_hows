@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import * as XLSX from 'xlsx';
 import { CATEGORIES } from '../../data/categories';
+import { STATES } from '../../data/states';
 
 export default function Step0_SalaryBreakdown({ state }) {
   const { 
@@ -60,29 +61,47 @@ export default function Step0_SalaryBreakdown({ state }) {
   return (
     <div className="sim-card sim-card-blue">
       <div className="sim-card-header">
-        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-          <div>
-            <h3 style={{margin: 0}}>Step 0: Component Builder</h3>
-            <p style={{margin: '4px 0 0 0', fontSize: 13, color: '#64748b'}}>Build the CTC structurally. Use exactly `basic * 0.40` for formulas.</p>
-          </div>
-          <div style={{display: 'flex', gap: 10}}>
-            <input 
-              type="file" 
-              accept=".xlsx, .xls, .csv" 
-              ref={fileInputRef} 
-              onChange={handleFileUpload} 
-              style={{ display: 'none' }} 
-            />
-            <button 
-              onClick={() => fileInputRef.current.click()}
-              style={{background: '#e2e8f0', color: '#334155', border: 'none', padding: '6px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 13, fontWeight: 600}}>
-              📁 Upload Excel
-            </button>
-            <button 
-              onClick={addComponent}
-              style={{background: '#2563eb', color: 'white', border: 'none', padding: '6px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 13, fontWeight: 600}}>
-              + Add Component
-            </button>
+        <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+            <div>
+              <h3 style={{margin: 0}}>Step 0: Component Builder</h3>
+              <p style={{margin: '4px 0 0 0', fontSize: 13, color: '#64748b'}}>Build the CTC structurally. Use exactly `basic * 0.40` for formulas.</p>
+            </div>
+            <div style={{display: 'flex', gap: 10, alignItems: 'center'}}>
+              <div style={{display: 'flex', gap: 8, alignItems: 'center', background: '#f1f5f9', padding: '6px 12px', borderRadius: 6}}>
+                <label style={{fontSize: 12, fontWeight: 600, color: '#475569'}}>Region:</label>
+                <select 
+                  value={state.selectedState} 
+                  onChange={(e) => state.updateData('selectedState', e.target.value)}
+                  style={{padding: '4px 8px', border: '1px solid #cbd5e1', borderRadius: 4, fontSize: 12, outline: 'none'}}>
+                  {STATES.map(st => <option key={st.code} value={st.code}>{st.name} ({st.code})</option>)}
+                </select>
+                <input 
+                  type="text" 
+                  placeholder="City (Optional)"
+                  value={state.selectedCity}
+                  onChange={(e) => state.updateData('selectedCity', e.target.value)}
+                  style={{padding: '4px 8px', border: '1px solid #cbd5e1', borderRadius: 4, fontSize: 12, outline: 'none', width: 100}}
+                />
+              </div>
+              <input 
+                type="file" 
+                accept=".xlsx, .xls, .csv" 
+                ref={fileInputRef} 
+                onChange={handleFileUpload} 
+                style={{ display: 'none' }} 
+              />
+              <button 
+                onClick={() => fileInputRef.current.click()}
+                style={{background: '#e2e8f0', color: '#334155', border: 'none', padding: '6px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 13, fontWeight: 600}}>
+                📁 Upload Excel
+              </button>
+              <button 
+                onClick={addComponent}
+                style={{background: '#2563eb', color: 'white', border: 'none', padding: '6px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 13, fontWeight: 600}}>
+                + Add Component
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -90,7 +109,8 @@ export default function Step0_SalaryBreakdown({ state }) {
       <div className="sim-card-body">
         <div style={{display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24}}>
           {salaryComponents.map((comp) => (
-            <div key={comp.id} style={{display: 'grid', gridTemplateColumns: 'minmax(180px, 1fr) minmax(150px, 1fr) 140px 30px', gap: 12, alignItems: 'flex-start'}}>
+          <React.Fragment key={comp.id}>
+            <div style={{display: 'grid', gridTemplateColumns: 'minmax(180px, 1fr) minmax(150px, 1fr) 140px 30px', gap: 12, alignItems: 'flex-start'}}>
               <div style={{display: 'flex', flexDirection: 'column', gap: 6}}>
                 <select 
                   value={comp.matrixId || 'custom'} 
@@ -154,6 +174,18 @@ export default function Step0_SalaryBreakdown({ state }) {
                 ✕
               </button>
             </div>
+            {(() => {
+              const matchedMatrix = MATRIX_COMPONENTS.find(c => c.id === comp.matrixId);
+              if (matchedMatrix && matchedMatrix.states && matchedMatrix.states[state.selectedState] === 'N') {
+                return (
+                  <div style={{color: '#ef4444', fontSize: 11, fontWeight: 600, marginTop: -6, marginLeft: 2}}>
+                    ⚠️ {matchedMatrix.name} is legally not applicable in {STATES.find(s => s.code === state.selectedState)?.name || state.selectedState}.
+                  </div>
+                );
+              }
+              return null;
+            })()}
+          </React.Fragment>
           ))}
         </div>
 
