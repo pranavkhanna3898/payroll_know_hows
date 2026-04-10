@@ -20,27 +20,27 @@ export default function Step1_Salary({ state }) {
       <div className="sim-card-body">
         <div className="sim-input-grid">
           <div className="sim-input-group">
-            <label>Base Monthly Gross (Step 0)</label>
+            <label className="has-tooltip" data-tooltip="Total of all fixed standard components. Unprorated.">Base Monthly Gross (Step 0) <span className="tooltip-icon">?</span></label>
             <input type="number" value={standardGross} disabled style={{background: '#f1f5f9'}} />
           </div>
           <div className="sim-input-group">
-            <label>Days in Month</label>
+            <label className="has-tooltip" data-tooltip="Total calendar days for the execution month.">Days in Month <span className="tooltip-icon">?</span></label>
             <input type="number" value={daysInMonth} onChange={(e) => updateData('daysInMonth', e.target.value)} />
           </div>
           <div className="sim-input-group">
-            <label>LOP (Loss of Pay) Days</label>
+            <label className="has-tooltip" data-tooltip="Unpaid leaves. Directly reduces the standard attendance factor.">LOP (Loss of Pay) Days <span className="tooltip-icon">?</span></label>
             <input type="number" value={lopDays} onChange={(e) => updateData('lopDays', e.target.value)} />
           </div>
           <div className="sim-input-group">
-            <label>Overtime Hours</label>
+            <label className="has-tooltip" data-tooltip="Count of statutory OT hours to be paid.">Overtime Hours <span className="tooltip-icon">?</span></label>
             <input type="number" value={overtimeHours} onChange={(e) => updateData('overtimeHours', e.target.value)} />
           </div>
           <div className="sim-input-group">
-            <label>OT Rate/Hr (₹)</label>
+            <label className="has-tooltip" data-tooltip="Hourly multiplier for Overtime standard formula.">OT Rate/Hr (₹) <span className="tooltip-icon">?</span></label>
             <input type="number" value={otRate} onChange={(e) => updateData('otRate', e.target.value)} />
           </div>
           <div className="sim-input-group">
-            <label>Leave Encashment (Days)</label>
+            <label className="has-tooltip" data-tooltip="Divided against Base Monthly Gross / 26 days.">Leave Encashment (Days) <span className="tooltip-icon">?</span></label>
             <input type="number" value={leaveEncashmentDays} onChange={(e) => updateData('leaveEncashmentDays', e.target.value)} />
           </div>
         </div>
@@ -51,7 +51,7 @@ export default function Step1_Salary({ state }) {
             <div className="sim-input-grid">
               {variableComps.map(comp => (
                 <div key={comp.id} className="sim-input-group">
-                  <label>{comp.name} Target: ₹{comp.amount}</label>
+                  <label className="has-tooltip" data-tooltip={`Annual/Fixed target is ₹${comp.amount}`}>{comp.name} Target: ₹{comp.amount} <span className="tooltip-icon">?</span></label>
                   <input 
                     type="number" 
                     value={comp.currentPayout || ''} 
@@ -76,7 +76,7 @@ export default function Step1_Salary({ state }) {
               {arrearEntries.map(entry => (
                 <div key={entry.id} style={{ display: 'flex', gap: 12, alignItems: 'flex-end' }}>
                   <div className="sim-input-group" style={{ flex: 1.5, margin: 0 }}>
-                     <label style={{marginBottom: 4}}>Historical Month Baseline</label>
+                     <label className="has-tooltip" data-tooltip="The exact historical month where the shortage occurred." style={{marginBottom: 4}}>Historical Month Baseline <span className="tooltip-icon">?</span></label>
                      <select 
                        value={entry.monthName || 'January'} 
                        onChange={(e) => {
@@ -97,7 +97,7 @@ export default function Step1_Salary({ state }) {
                      </select>
                   </div>
                   <div className="sim-input-group" style={{ flex: 1, margin: 0 }}>
-                     <label style={{marginBottom: 4}}>Historical Gross</label>
+                     <label className="has-tooltip" data-tooltip="The Base CTC in effect during that specific time frame, overriding recent appraisals." style={{marginBottom: 4}}>Historical Gross <span className="tooltip-icon">?</span></label>
                      <input 
                        type="number" 
                        placeholder={`Current: ${standardGross}`}
@@ -107,7 +107,7 @@ export default function Step1_Salary({ state }) {
                      />
                   </div>
                   <div className="sim-input-group" style={{ flex: 1, margin: 0 }}>
-                     <label style={{marginBottom: 4}}>Payable Arrear Days</label>
+                     <label className="has-tooltip" data-tooltip="Discrete shortage days to be accurately fractioned." style={{marginBottom: 4}}>Payable Arrear Days <span className="tooltip-icon">?</span></label>
                      <input type="number" value={entry.arrearDays} onChange={(e) => updateArrearEntry(entry.id, 'arrearDays', e.target.value)} style={{margin: 0, width: '100%', boxSizing: 'border-box'}} />
                   </div>
                   <button onClick={() => removeArrearEntry(entry.id)} style={{ background: '#fee2e2', color: '#ef4444', border: 'none', height: 35, width: 35, borderRadius: 6, cursor: 'pointer' }}>✕</button>

@@ -123,7 +123,10 @@ export default function Step0_SalaryBreakdown({ state }) {
         </div>
 
         <div style={{display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, padding: '12px 16px', background: '#f8fafc', borderRadius: 8, border: '1px solid #e2e8f0'}}>
-          <label style={{fontWeight: 600, fontSize: 13, color: '#334155', minWidth: 200}}>Global EPF Calculation Basis:</label>
+          <label className="has-tooltip" data-tooltip="Dictates how the 12% statutory EPF deduction responds to attendance & LOP constraints." style={{fontWeight: 600, fontSize: 13, color: '#334155', minWidth: 200}}>
+            Global EPF Calculation Basis:
+            <span className="tooltip-icon">?</span>
+          </label>
           <select 
             value={state.epfCalculationMethod || 'prorated_ceiling'} 
             onChange={(e) => state.updateData('epfCalculationMethod', e.target.value)}

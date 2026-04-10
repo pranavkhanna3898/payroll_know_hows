@@ -34,30 +34,30 @@ export default function Step2_Tax({ state }) {
 
         <div className="sim-input-grid">
           <div className="sim-input-group" style={{opacity: taxRegime === 'new' ? 0.4 : 1, transition: 'opacity 0.2s'}}>
-            <label>80C Investments (Max 1.5L)</label>
+            <label className="has-tooltip" data-tooltip="Maximum ceiling 1.5L; Exempts investments like PPF, ELSS.">80C Investments (Max 1.5L) <span className="tooltip-icon">?</span></label>
             <input type="number" value={investments80C} disabled={taxRegime === 'new'} onChange={(e) => updateData('investments80C', e.target.value)} />
           </div>
           <div className="sim-input-group" style={{opacity: taxRegime === 'new' ? 0.4 : 1, transition: 'opacity 0.2s'}}>
-            <label>80D Medical Premium</label>
+            <label className="has-tooltip" data-tooltip="Exempts statutory health insurance premiums.">80D Medical Premium <span className="tooltip-icon">?</span></label>
             <input type="number" value={medical80D} disabled={taxRegime === 'new'} onChange={(e) => updateData('medical80D', e.target.value)} />
           </div>
           <div className="sim-input-group" style={{opacity: taxRegime === 'new' ? 0.4 : 1, transition: 'opacity 0.2s'}}>
-            <label>City Type (For HRA)</label>
+            <label className="has-tooltip" data-tooltip="Governs the active calculation bound: 50% Basic for Metro, 40% for Non-Metro.">City Type (For HRA) <span className="tooltip-icon">?</span></label>
             <select value={isMetro} disabled={taxRegime === 'new'} onChange={(e) => updateData('isMetro', e.target.value === 'true')}>
               <option value={true}>Metro (50% Basic)</option>
               <option value={false}>Non-Metro (40% Basic)</option>
             </select>
           </div>
           <div className="sim-input-group" style={{opacity: taxRegime === 'new' ? 0.4 : 1, transition: 'opacity 0.2s'}}>
-            <label>Monthly Rent Paid</label>
+            <label className="has-tooltip" data-tooltip="Annualized to evaluate the 'Rent - 10% Basic' limit constraint.">Monthly Rent Paid <span className="tooltip-icon">?</span></label>
             <input type="number" value={monthlyRentPaid} disabled={taxRegime === 'new'} onChange={(e) => updateData('monthlyRentPaid', e.target.value)} />
           </div>
           <div className="sim-input-group">
-            <label>TDS Deducted So Far (YTD)</label>
+            <label className="has-tooltip" data-tooltip="Taxes already secured in the current central fiscal year.">TDS Deducted So Far (YTD) <span className="tooltip-icon">?</span></label>
             <input type="number" value={tdsDeductedSoFar} onChange={(e) => updateData('tdsDeductedSoFar', e.target.value)} />
           </div>
           <div className="sim-input-group">
-            <label>Remaining Months in FY</label>
+            <label className="has-tooltip" data-tooltip="Number of distinct payroll cycles remaining to amortize tax recovery across.">Remaining Months in FY <span className="tooltip-icon">?</span></label>
             <input type="number" value={monthsRemaining} min="1" onChange={(e) => updateData('monthsRemaining', e.target.value)} />
           </div>
         </div>
