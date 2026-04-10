@@ -49,7 +49,7 @@ export default function SimulationsTab() {
     setData(prev => ({
       ...prev,
       salaryComponents: prev.salaryComponents.map(c => 
-        c.id === id ? { ...c, [field]: field === 'amount' ? (isNaN(Number(value)) ? 0 : Number(value)) : value } : c
+        c.id === id ? { ...c, [field]: value } : c
       )
     }));
   };
@@ -104,15 +104,50 @@ export default function SimulationsTab() {
   let variableTarget = 0;
   let variablePay = 0;
 
+  // PASS 1: Calculate absolute numeric components
   data.salaryComponents.forEach(c => {
-    if (c.type === 'earnings_basic') standardBasic += c.amount;
-    else if (c.type === 'earnings_hra') standardHRA += c.amount;
-    else if (c.type === 'earnings_allowance') standardSpecial += c.amount;
-    else if (c.type === 'reimbursement') monthlyReimbursements += c.amount;
-    else if (c.type === 'employer_contrib') employerContribs += c.amount;
-    else if (c.type === 'employee_deduction') employeeDeductions += c.amount;
+    let val = 0;
+    if (typeof c.amount === 'number') val = c.amount;
+    else if (c.amount && !isNaN(Number(c.amount))) val = Number(c.amount);
+    c._resolvedAmount = val;
+  });
+
+  // Accumulate scope Basic from Pass 1 for Pass 2 evaluation
+  let scopeBasic = 0;
+  data.salaryComponents.forEach(c => {
+     if (c.type === 'earnings_basic') scopeBasic += c._resolvedAmount;
+  });
+
+  // PASS 2: Safely evaluate alphanumeric formulas (e.g. "basic * 0.40")
+  data.salaryComponents.forEach(c => {
+    if (typeof c.amount === 'string' && isNaN(Number(c.amount))) {
+       try {
+         const mathFunc = new Function('basic', `return ${c.amount};`);
+         c._resolvedAmount = Number(mathFunc(scopeBasic)) || 0;
+       } catch (e) {
+         c._resolvedAmount = 0;
+       }
+    }
+  });
+
+  let manualEpfInput = 0;
+
+  // Final Accumulation using resolved values
+  data.salaryComponents.forEach(c => {
+    const val = c._resolvedAmount;
+    if (c.type === 'earnings_basic') standardBasic += val;
+    else if (c.type === 'earnings_hra') standardHRA += val;
+    else if (c.type === 'earnings_allowance') standardSpecial += val;
+    else if (c.type === 'reimbursement') monthlyReimbursements += val;
+    else if (c.type === 'employer_contrib') {
+        employerContribs += val;
+        if (c.matrixId === 'epf_ee' || c.name.toLowerCase().includes('epf')) {
+             if (val > 0) manualEpfInput = val; 
+        }
+    }
+    else if (c.type === 'employee_deduction') employeeDeductions += val;
     else if (c.type === 'variable') {
-      variableTarget += c.amount;
+      variableTarget += val;
       variablePay += (c.currentPayout || 0);
     }
   });
@@ -212,14 +247,19 @@ export default function SimulationsTab() {
 
   // Deductions
   let pfEmployee = 0;
-  if (data.epfCalculationMethod === 'flat_ceiling') {
+  
+  if (manualEpfInput > 0) {
+    // Structural Bypass: use the hardcoded formula value prorated by LOP
+    pfEmployee = manualEpfInput * attendanceFactor;
+  } else if (data.epfCalculationMethod === 'flat_ceiling') {
     pfEmployee = Math.min(1800, standardBasic * 0.12);
   } else if (data.epfCalculationMethod === 'actual_basic') {
     pfEmployee = basic * 0.12; 
   } else {
     pfEmployee = Math.min(1800 * attendanceFactor, basic * 0.12);
   }
-  const pfEmployer = pfEmployee; 
+  
+  const pfEmployer = pfEmployee;  
   const esiEmployee = grossSalary <= 21000 ? grossSalary * 0.0075 : 0;
   const esiEmployer = grossSalary <= 21000 ? grossSalary * 0.0325 : 0;
   const pt = 200; 

@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import * as XLSX from 'xlsx';
+import { CATEGORIES } from '../../data/categories';
 
 export default function Step0_SalaryBreakdown({ state }) {
   const { 
@@ -9,6 +10,10 @@ export default function Step0_SalaryBreakdown({ state }) {
   } = state;
 
   const fileInputRef = useRef(null);
+
+  const MATRIX_COMPONENTS = CATEGORIES.flatMap(cat => 
+    cat.components.map(comp => ({ ...comp, categoryId: cat.id }))
+  );
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -39,7 +44,8 @@ export default function Step0_SalaryBreakdown({ state }) {
           name: name,
           type: typeVal,
           amount: Number(row['Amount']) || 0,
-          currentPayout: 0
+          currentPayout: 0,
+          matrixId: 'custom'
         };
       });
 
@@ -57,7 +63,7 @@ export default function Step0_SalaryBreakdown({ state }) {
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <div>
             <h3 style={{margin: 0}}>Step 0: Component Builder</h3>
-            <p style={{margin: '4px 0 0 0', fontSize: 13, color: '#64748b'}}>Build the employee's CTC structure manually or via Excel.</p>
+            <p style={{margin: '4px 0 0 0', fontSize: 13, color: '#64748b'}}>Build the CTC structurally. Use exactly `basic * 0.40` for formulas.</p>
           </div>
           <div style={{display: 'flex', gap: 10}}>
             <input 
@@ -84,14 +90,42 @@ export default function Step0_SalaryBreakdown({ state }) {
       <div className="sim-card-body">
         <div style={{display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24}}>
           {salaryComponents.map((comp) => (
-            <div key={comp.id} style={{display: 'grid', gridTemplateColumns: 'minmax(120px, 1fr) minmax(150px, 1.5fr) 100px 30px', gap: 12, alignItems: 'center'}}>
-              <input 
-                type="text" 
-                value={comp.name} 
-                onChange={(e) => updateComponent(comp.id, 'name', e.target.value)} 
-                placeholder="Component Name"
-                style={{padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1', fontSize: 13, width: '100%', boxSizing: 'border-box'}}
-              />
+            <div key={comp.id} style={{display: 'grid', gridTemplateColumns: 'minmax(180px, 1fr) minmax(150px, 1fr) 140px 30px', gap: 12, alignItems: 'flex-start'}}>
+              <div style={{display: 'flex', flexDirection: 'column', gap: 6}}>
+                <select 
+                  value={comp.matrixId || 'custom'} 
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === 'custom') {
+                       updateComponent(comp.id, 'matrixId', 'custom');
+                       updateComponent(comp.id, 'name', '');
+                    } else {
+                       const matched = MATRIX_COMPONENTS.find(c => c.id === val);
+                       updateComponent(comp.id, 'matrixId', val);
+                       updateComponent(comp.id, 'name', matched.name);
+                    }
+                  }}
+                  style={{padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1', fontSize: 13, width: '100%', boxSizing: 'border-box'}}
+                >
+                   <option value="custom">-- Custom Component --</option>
+                   {CATEGORIES.map(cat => (
+                      <optgroup key={cat.id} label={cat.name}>
+                        {cat.components.map(c => (
+                           <option key={c.id} value={c.id}>{c.name}</option>
+                        ))}
+                      </optgroup>
+                   ))}
+                </select>
+                {(!comp.matrixId || comp.matrixId === 'custom') && (
+                  <input 
+                    type="text" 
+                    value={comp.name} 
+                    onChange={(e) => updateComponent(comp.id, 'name', e.target.value)} 
+                    placeholder="Custom Rule Name..."
+                    style={{padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1', fontSize: 13, width: '100%', boxSizing: 'border-box'}}
+                  />
+                )}
+              </div>
               <select 
                 value={comp.type} 
                 onChange={(e) => updateComponent(comp.id, 'type', e.target.value)}
@@ -105,12 +139,13 @@ export default function Step0_SalaryBreakdown({ state }) {
                 <option value="employee_deduction">Employee Deduction</option>
               </select>
               <div style={{position: 'relative'}}>
-                <span style={{position: 'absolute', left: 10, top: 9, color: '#64748b', fontSize: 13}}>₹</span>
+                <span style={{position: 'absolute', left: 12, top: 9, color: '#64748b', fontSize: 11, fontWeight: 700}}>ƒ(x)</span>
                 <input 
-                  type="number" 
+                  type="text" 
                   value={comp.amount} 
                   onChange={(e) => updateComponent(comp.id, 'amount', e.target.value)} 
-                  style={{padding: '8px 8px 8px 22px', borderRadius: 6, border: '1px solid #cbd5e1', fontSize: 13, width: '100%', boxSizing: 'border-box'}}
+                  placeholder="Val or basic*0.4"
+                  style={{padding: '8px 8px 8px 36px', borderRadius: 6, border: '1px solid #cbd5e1', fontSize: 13, width: '100%', boxSizing: 'border-box'}}
                 />
               </div>
               <button 
