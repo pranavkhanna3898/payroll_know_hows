@@ -166,10 +166,14 @@ export default function SimulationsTab() {
   };
 
   const updateComponent = (id, field, value) => {
+    // Cast to number if it looks like one, but keep strings for names/id/matrixId
+    const isNumericField = ['amount', 'currentPayout'].includes(field);
+    const numValue = isNumericField && !isNaN(Number(value)) && value !== '' ? Number(value) : value;
+    
     setData(prev => ({
       ...prev,
       salaryComponents: prev.salaryComponents.map(c => 
-        c.id === id ? { ...c, [field]: value } : c
+        c.id === id ? { ...c, [field]: numValue } : c
       )
     }));
   };
@@ -236,7 +240,7 @@ export default function SimulationsTab() {
   // Accumulate scope Basic from Pass 1 for Pass 2 evaluation
   let scopeBasic = 0;
   data.salaryComponents.forEach(c => {
-     if (c.type === 'earnings_basic') scopeBasic += c._resolvedAmount;
+    if (c.type === 'earnings_basic') scopeBasic += c._resolvedAmount;
   });
 
   // PASS 2: Safely evaluate alphanumeric formulas (e.g. "basic * 0.40")
@@ -311,14 +315,14 @@ export default function SimulationsTab() {
     }
     else if (c.type === 'variable') {
       variableTarget += val;
-      variablePay += (c.currentPayout || 0);
+      variablePay += (Number(c.currentPayout) || 0); // Explicit cast to Number!
     }
   });
 
   const standardGross = standardBasic + standardHRA + standardSpecial + (data.reimbursementTaxStrategy === 'monthly' ? monthlyReimbursements : 0);
   const totalMonthlyCTC = standardGross + (data.reimbursementTaxStrategy === 'year_end' ? monthlyReimbursements : 0) + employerContribs + variableTarget;
 
-  const attendanceFactor = Math.max(0, (data.daysInMonth - data.lopDays) / data.daysInMonth);
+  const attendanceFactor = data.daysInMonth > 0 ? Math.max(0, (data.daysInMonth - data.lopDays) / data.daysInMonth) : 0;
   const basic = standardBasic * attendanceFactor;
   const hra = standardHRA * attendanceFactor;
   const special = standardSpecial * attendanceFactor;
@@ -328,7 +332,8 @@ export default function SimulationsTab() {
   let arrearsPay = 0;
   data.arrearEntries.forEach(entry => {
     const baseToUse = entry.historicalGross || standardGross;
-    arrearsPay += (baseToUse / entry.monthDays) * entry.arrearDays;
+    const divisor = entry.monthDays || 30; // Guard against 0 days in month
+    arrearsPay += (baseToUse / divisor) * entry.arrearDays;
   });
   
   const grossSalary = basic + hra + special + overtimePay + arrearsPay + leaveEncashmentPay + variablePay + (data.reimbursementTaxStrategy === 'monthly' ? (monthlyReimbursements * attendanceFactor) : 0);

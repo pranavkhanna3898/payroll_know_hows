@@ -84,6 +84,22 @@ export default function Step0_SalaryBreakdown({ state }) {
     e.target.value = null;
   };
 
+  const downloadTemplate = () => {
+    const templateData = [
+      { 'Name': 'Basic Salary', 'Type': 'Basic', 'Amount': 50000 },
+      { 'Name': 'HRA', 'Type': 'HRA', 'Amount': 20000 },
+      { 'Name': 'Special Allowance', 'Type': 'Allowance', 'Amount': 15000 },
+      { 'Name': 'Performance Bonus', 'Type': 'Variable', 'Amount': 10000 },
+      { 'Name': 'Medical Reimbursement', 'Type': 'Reimbursement', 'Amount': 2000 },
+      { 'Name': 'EPF Employee Share', 'Type': 'Employee Deduction', 'Amount': 1800 },
+      { 'Name': 'EPF Employer Share', 'Type': 'Employer Contribution', 'Amount': 1800 }
+    ];
+    const ws = XLSX.utils.json_to_sheet(templateData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Template");
+    XLSX.writeFile(wb, "Payroll_Component_Template.xlsx");
+  };
+
   /* ── Pill-button helper ──────────────────────────────── */
   const Pill = ({ active, onClick, children, color = '#2563eb' }) => (
     <button
@@ -121,6 +137,11 @@ export default function Step0_SalaryBreakdown({ state }) {
             </div>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
               <input type="file" accept=".xlsx,.xls,.csv" ref={fileInputRef} onChange={handleFileUpload} style={{ display: 'none' }} />
+              <button
+                onClick={downloadTemplate}
+                style={{ background: '#f8fafc', color: '#64748b', border: '1px solid #e2e8f0', padding: '6px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 600 }}>
+                📥 Download Template
+              </button>
               <button
                 onClick={() => fileInputRef.current.click()}
                 style={{ background: '#e2e8f0', color: '#334155', border: 'none', padding: '6px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 600 }}>
