@@ -4,7 +4,8 @@ export default function Step1_Salary({ state }) {
   const {
     daysInMonth, lopDays, overtimeHours, otRate, leaveEncashmentDays, arrearEntries,
     updateData, standardBasic, standardHRA, standardSpecial, salaryComponents, updateComponent, addArrearEntry, updateArrearEntry, removeArrearEntry,
-    basic, hra, special, overtimePay, arrearsPay, leaveEncashmentPay, variablePay, grossSalary, attendanceFactor
+    basic, hra, special, overtimePay, arrearsPay, leaveEncashmentPay, variablePay, grossSalary, attendanceFactor,
+    monthlyReimbursements, reimbursementTaxStrategy
   } = state;
 
   const variableComps = salaryComponents.filter(c => c.type === 'variable');
@@ -118,50 +119,57 @@ export default function Step1_Salary({ state }) {
         </div>
 
         <div className="sim-output-box" style={{ marginTop: 24 }}>
-          <h4>Calculation: Attendance Proration & Gross</h4>
-          <div className="code-content" style={{background: 'transparent', padding: '0 0 10px', color: '#475569', fontSize: 12}}>
-             Attendance Factor = (Days - LOP) / Days <br/>
-             → ({daysInMonth} - {lopDays}) / {daysInMonth} = {attendanceFactor.toFixed(4)} Multiplier
+          <h4>Calculation Breakup: Attendance Proration &amp; Gross</h4>
+
+          {/* Step ① */}
+          <div style={{ background: '#f8fafc', borderRadius: 6, padding: '10px 14px', marginBottom: 10, fontSize: 12 }}>
+            <div style={{ fontWeight: 700, color: '#475569', marginBottom: 6 }}>① Attendance Factor</div>
+            <div style={{ color: '#64748b', fontFamily: 'monospace' }}>
+              = (Days in Month − LOP Days) ÷ Days in Month<br/>
+              = ({daysInMonth} − {lopDays}) ÷ {daysInMonth}<br/>
+              <span style={{ color: '#1e40af', fontWeight: 700 }}>= {attendanceFactor.toFixed(6)}</span>
+            </div>
           </div>
-          <div className="sim-line-item">
-            <span>Basic (Prorated):</span>
-            <span>₹ {basic.toLocaleString(undefined, {maximumFractionDigits: 2})}</span>
+
+          {/* Step ② */}
+          <div style={{ background: '#f8fafc', borderRadius: 6, padding: '10px 14px', marginBottom: 10, fontSize: 12 }}>
+            <div style={{ fontWeight: 700, color: '#475569', marginBottom: 6 }}>② Prorated Fixed Earnings</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontFamily: 'monospace', color: '#64748b' }}>
+              <div>Basic : ₹{standardBasic.toLocaleString()} × {attendanceFactor.toFixed(4)} = <strong style={{color:'#0f172a'}}>₹{basic.toLocaleString(undefined,{maximumFractionDigits:2})}</strong></div>
+              <div>HRA   : ₹{standardHRA.toLocaleString()} × {attendanceFactor.toFixed(4)} = <strong style={{color:'#0f172a'}}>₹{hra.toLocaleString(undefined,{maximumFractionDigits:2})}</strong></div>
+              <div>Allow : ₹{standardSpecial.toLocaleString()} × {attendanceFactor.toFixed(4)} = <strong style={{color:'#0f172a'}}>₹{special.toLocaleString(undefined,{maximumFractionDigits:2})}</strong></div>
+            </div>
           </div>
-          <div className="sim-line-item">
-            <span>HRA (Prorated):</span>
-            <span>₹ {hra.toLocaleString(undefined, {maximumFractionDigits: 2})}</span>
-          </div>
-          <div className="sim-line-item">
-            <span>Taxable Allowances:</span>
-            <span>₹ {special.toLocaleString(undefined, {maximumFractionDigits: 2})}</span>
-          </div>
-          {overtimePay > 0 && (
-            <div className="sim-line-item">
-              <span>Overtime Component:</span>
-              <span>+ ₹ {overtimePay.toLocaleString(undefined, {maximumFractionDigits: 2})}</span>
+
+          {/* Step ③ — Additions */}
+          {(overtimePay > 0 || leaveEncashmentPay > 0 || variablePay > 0 || arrearsPay > 0 || (reimbursementTaxStrategy === 'monthly' && monthlyReimbursements > 0)) && (
+            <div style={{ background: '#f0fdf4', borderRadius: 6, padding: '10px 14px', marginBottom: 10, fontSize: 12 }}>
+              <div style={{ fontWeight: 700, color: '#475569', marginBottom: 6 }}>③ Additional Components</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontFamily: 'monospace', color: '#64748b' }}>
+                {overtimePay > 0 && <div>Overtime : {overtimeHours} hrs × ₹{otRate}/hr = <strong style={{color:'#15803d'}}>₹{overtimePay.toLocaleString(undefined,{maximumFractionDigits:2})}</strong></div>}
+                {leaveEncashmentPay > 0 && <div>Encashment : (₹{standardGross.toLocaleString()} ÷ 26) × {leaveEncashmentDays} days = <strong style={{color:'#15803d'}}>₹{leaveEncashmentPay.toLocaleString(undefined,{maximumFractionDigits:2})}</strong></div>}
+                {variablePay > 0 && <div>Variable ({variableComps.length} payout{variableComps.length > 1 ? 's' : ''}) : <strong style={{color:'#15803d'}}>₹{variablePay.toLocaleString(undefined,{maximumFractionDigits:2})}</strong></div>}
+                {arrearsPay > 0 && <div>Arrears (historical prorated) : <strong style={{color:'#15803d'}}>₹{arrearsPay.toLocaleString(undefined,{maximumFractionDigits:2})}</strong></div>}
+                {reimbursementTaxStrategy === 'monthly' && monthlyReimbursements > 0 && <div>Reimbursements (taxed monthly) : <strong style={{color:'#15803d'}}>₹{(monthlyReimbursements * attendanceFactor).toLocaleString(undefined,{maximumFractionDigits:2})}</strong></div>}
+              </div>
             </div>
           )}
-          {leaveEncashmentPay > 0 && (
-            <div className="sim-line-item">
-              <span>Leave Encashment:</span>
-              <span>+ ₹ {leaveEncashmentPay.toLocaleString(undefined, {maximumFractionDigits: 2})}</span>
+
+          {/* Total */}
+          <div style={{ background: '#1e293b', borderRadius: 6, padding: '12px 14px', fontSize: 13 }}>
+            <div style={{ fontWeight: 700, color: '#94a3b8', marginBottom: 4 }}>④ Gross Salary = Σ All Prorated Components</div>
+            <div style={{ fontFamily: 'monospace', color: '#7dd3fc', fontSize: 11, lineHeight: 1.8 }}>
+              ₹{basic.toFixed(2)} (Basic)
+              + ₹{hra.toFixed(2)} (HRA)
+              + ₹{special.toFixed(2)} (Allow)
+              {overtimePay > 0 && ` + ₹${overtimePay.toFixed(2)} (OT)`}
+              {leaveEncashmentPay > 0 && ` + ₹${leaveEncashmentPay.toFixed(2)} (LE)`}
+              {variablePay > 0 && ` + ₹${variablePay.toFixed(2)} (Var)`}
+              {arrearsPay > 0 && ` + ₹${arrearsPay.toFixed(2)} (Arr)`}
             </div>
-          )}
-          {variablePay > 0 && (
-            <div className="sim-line-item">
-              <span>Variable Payouts ({variableComps.length}):</span>
-              <span>+ ₹ {variablePay.toLocaleString(undefined, {maximumFractionDigits: 2})}</span>
+            <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginTop: 8 }}>
+              = ₹ {grossSalary.toLocaleString(undefined, {maximumFractionDigits: 2})}
             </div>
-          )}
-          {arrearsPay > 0 && (
-            <div className="sim-line-item">
-              <span>Arrears Payload:</span>
-              <span>+ ₹ {arrearsPay.toLocaleString(undefined, {maximumFractionDigits: 2})}</span>
-            </div>
-          )}
-          <div className="sim-line-item sim-total" style={{marginTop: 8}}>
-            <span>Total Imputed Gross Salary:</span>
-            <span>₹ {grossSalary.toLocaleString(undefined, {maximumFractionDigits: 2})}</span>
           </div>
         </div>
       </div>
