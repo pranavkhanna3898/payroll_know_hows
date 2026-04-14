@@ -319,7 +319,7 @@ export default function SimulationsTab() {
     }
   });
 
-  const standardGross = standardBasic + standardHRA + standardSpecial + (data.reimbursementTaxStrategy === 'monthly' ? monthlyReimbursements : 0);
+  const standardGross = standardBasic + standardHRA + standardSpecial + variableTarget + (data.reimbursementTaxStrategy === 'monthly' ? monthlyReimbursements : 0);
   const totalMonthlyCTC = standardGross + (data.reimbursementTaxStrategy === 'year_end' ? monthlyReimbursements : 0) + employerContribs + variableTarget;
 
   const attendanceFactor = data.daysInMonth > 0 ? Math.max(0, (data.daysInMonth - data.lopDays) / data.daysInMonth) : 0;
