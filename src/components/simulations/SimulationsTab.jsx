@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getEmployees } from '../../data/api';
+// ... existing imports ...
 import Step0_SalaryBreakdown from './Step0_SalaryBreakdown';
 import Step1_Salary from './Step1_Salary';
 import Step2_Tax from './Step2_Tax';
@@ -10,8 +12,33 @@ import { computeEmployeePayroll } from '../../data/payrollEngine';
 
 const MATRIX_COMPONENTS = CATEGORIES.flatMap(cat => cat.components);
 
-
 export default function SimulationsTab() {
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getEmployees().then(setEmployees).catch(console.error);
+  }, []);
+
+  const loadEmployee = (empId) => {
+    const emp = employees.find(e => e.id === empId);
+    if (!emp) return;
+
+    setData(prev => ({
+      ...prev,
+      empName: emp.name,
+      empCode: emp.emp_code,
+      salaryComponents: emp.salary_structure || [],
+      taxRegime: emp.tax_regime || 'new',
+      bankName: emp.bank_name || '',
+      accNumber: emp.account_number || '',
+      ifsc: emp.ifsc || '',
+      selectedState: emp.selected_state || 'KA',
+      // Reset variables that are simulation specific
+      lopDays: 0,
+      overtimeHours: 0,
+    }));
+  };
   const [data, setData] = useState({
     // Step 1 Inputs
     salaryComponents: [
@@ -140,6 +167,20 @@ export default function SimulationsTab() {
       </div>
 
       <div className="pipeline-steps">
+        {/* Employee Selector for Simulation */}
+        {employees.length > 0 && (
+          <div className="sim-card" style={{ marginBottom: 24, padding: '16px 20px', background: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: 16 }}>
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#475569' }}>👤 Auto-fill from Employee Database:</span>
+            <select 
+              onChange={e => loadEmployee(e.target.value)}
+              style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 8, fontSize: 13, minWidth: 200, outline: 'none' }}
+            >
+              <option value="">-- Choose an Employee --</option>
+              {employees.map(e => <option key={e.id} value={e.id}>{e.name} ({e.emp_code})</option>)}
+            </select>
+          </div>
+        )}
+
         <Step0_SalaryBreakdown state={simState} />
         <div className="pipeline-arrow">⬇</div>
         <Step1_Salary state={simState} />

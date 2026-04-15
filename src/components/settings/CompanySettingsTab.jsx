@@ -1,6 +1,10 @@
-import { useState } from 'react';
-import { loadSettings, saveSettings } from '../../data/settingsStore';
+import { useState, useEffect } from 'react';
+import { getDefaults } from '../../data/settingsStore';
 import { STATES } from '../../data/states';
+import { 
+  getCompanySettings, saveCompanySettings, 
+  getEmployees, upsertEmployee, deleteEmployee 
+} from '../../data/api';
 
 const SECTIONS = [
   { id: 'company',    icon: '🏢', label: 'Company Profile' },
@@ -8,6 +12,7 @@ const SECTIONS = [
   { id: 'cycle',      icon: '🔄', label: 'Payroll Cycle' },
   { id: 'bank',       icon: '🏦', label: 'Bank Integration' },
   { id: 'structure',  icon: '⚙️', label: 'Salary Structure' },
+  { id: 'employees',  icon: '👥', label: 'Employees' },
 ];
 
 const Field = ({ label, children, hint }) => (
@@ -18,8 +23,9 @@ const Field = ({ label, children, hint }) => (
   </div>
 );
 
-const TextInput = ({ value, onChange, placeholder, disabled }) => (
+const TextInput = ({ value, onChange, placeholder, disabled, type = 'text' }) => (
   <input
+    type={type}
     value={value || ''}
     onChange={e => onChange(e.target.value)}
     placeholder={placeholder}
@@ -32,17 +38,199 @@ const Grid = ({ children, cols = 2 }) => (
   <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 16 }}>{children}</div>
 );
 
-const SectionCard = ({ title, icon, children }) => (
+const SectionCard = ({ title, icon, children, action }) => (
   <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e2e8f0', marginBottom: 20, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
-    <div style={{ padding: '14px 20px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: 8 }}>
-      <span style={{ fontSize: 18 }}>{icon}</span>
-      <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#0f172a' }}>{title}</h3>
+    <div style={{ padding: '14px 20px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ fontSize: 18 }}>{icon}</span>
+        <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#0f172a' }}>{title}</h3>
+      </div>
+      {action}
     </div>
     <div style={{ padding: 20 }}>{children}</div>
   </div>
 );
 
-// ── Section: Company Profile ──────────────────────────────────────────────────
+// ── Comp: EmployeeManagement ──────────────────────────────────────────────────
+function EmployeeManagement({ settings }) {
+  const [employees, setEmployees] = useState([]);
+  const [editingEmp, setEditingEmp] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
+  async function fetchEmployees() {
+    setLoading(true);
+    try {
+      const data = await getEmployees();
+      setEmployees(data);
+    } catch (e) { console.error(e); }
+    setLoading(false);
+  }
+
+  function handleAdd() {
+    setEditingEmp({
+      emp_code: `EMP${1000 + employees.length + 1}`,
+      name: '',
+      department: 'Technology',
+      designation: 'Software Engineer',
+      salary_structure: JSON.parse(JSON.stringify(settings.defaultSalaryComponents || [])),
+      bank_info: { bank_name: '', account_no: '', ifsc: '' },
+      is_active: true
+    });
+  }
+
+  async function handleSave() {
+    try {
+      await upsertEmployee(editingEmp);
+      setEditingEmp(null);
+      fetchEmployees();
+    } catch (e) { alert('Error saving employee: ' + e.message); }
+  }
+
+  async function handleDelete(id) {
+    if (!confirm('Are you sure you want to delete this employee?')) return;
+    try {
+      await deleteEmployee(id);
+      fetchEmployees();
+    } catch (e) { alert('Error deleting: ' + e.message); }
+  }
+
+  if (editingEmp) {
+    return (
+      <div style={{ animation: 'fadeIn 0.2s' }}>
+        <div style={{ marginBottom: 16, display: 'flex', gap: 12, alignItems: 'center' }}>
+          <button onClick={() => setEditingEmp(null)} style={{ background: 'none', border: 'none', color: '#6366f1', cursor: 'pointer', fontWeight: 600 }}>← Back to List</button>
+          <h2 style={{ margin: 0, fontSize: 16 }}>{editingEmp.id ? 'Edit Employee' : 'Add New Employee'}</h2>
+        </div>
+
+        <SectionCard title="Basic Information" icon="👤">
+          <Grid cols={3}>
+            <Field label="Employee Code"><TextInput value={editingEmp.emp_code} onChange={v => setEditingEmp({...editingEmp, emp_code: v})} /></Field>
+            <Field label="Full Name"><TextInput value={editingEmp.name} onChange={v => setEditingEmp({...editingEmp, name: v})} /></Field>
+            <Field label="Department"><TextInput value={editingEmp.department} onChange={v => setEditingEmp({...editingEmp, department: v})} /></Field>
+            <Field label="Designation"><TextInput value={editingEmp.designation} onChange={v => setEditingEmp({...editingEmp, designation: v})} /></Field>
+            <Field label="Status">
+              <select value={String(editingEmp.is_active)} onChange={e => setEditingEmp({...editingEmp, is_active: e.target.value === 'true'})}
+                style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, width: '100%' }}>
+                <option value="true">Active</option>
+                <option value="false">Inactive</option>
+              </select>
+            </Field>
+          </Grid>
+        </SectionCard>
+
+        <SectionCard title="Bank Details" icon="🏦">
+          <Grid cols={3}>
+            <Field label="Bank Name"><TextInput value={editingEmp.bank_info?.bank_name} onChange={v => setEditingEmp({...editingEmp, bank_info: {...editingEmp.bank_info, bank_name: v}})} /></Field>
+            <Field label="Account Number"><TextInput value={editingEmp.bank_info?.account_no} onChange={v => setEditingEmp({...editingEmp, bank_info: {...editingEmp.bank_info, account_no: v}})} /></Field>
+            <Field label="IFSC Code"><TextInput value={editingEmp.bank_info?.ifsc} onChange={v => setEditingEmp({...editingEmp, bank_info: {...editingEmp.bank_info, ifsc: v}})} /></Field>
+          </Grid>
+        </SectionCard>
+
+        <SectionCard title="Individual Salary Structure" icon="💰">
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+            <thead>
+              <tr style={{ background: '#f1f5f9' }}>
+                {['Component', 'Type', 'Amount / Formula', 'Tax Schedule', ''].map(h => (
+                  <th key={h} style={{ padding: '8px 10px', textAlign: 'left', fontWeight: 700, borderBottom: '2px solid #e2e8f0' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {editingEmp.salary_structure.map((c, idx) => (
+                <tr key={c.id}>
+                  <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>{c.name}</td>
+                  <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0', fontSize: 10, color: '#64748b' }}>{c.type}</td>
+                  <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
+                    <input value={c.amount} onChange={e => {
+                      const updated = editingEmp.salary_structure.map((item, i) => i === idx ? { ...item, amount: e.target.value } : item);
+                      setEditingEmp({...editingEmp, salary_structure: updated});
+                    }} style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px 8px', width: '100%', fontSize: 12, fontFamily: 'monospace' }} />
+                  </td>
+                  <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
+                    <select value={c.taxSchedule} onChange={e => {
+                      const updated = editingEmp.salary_structure.map((item, i) => i === idx ? { ...item, taxSchedule: e.target.value } : item);
+                      setEditingEmp({...editingEmp, salary_structure: updated});
+                    }} style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px', fontSize: 12 }}>
+                      <option value="monthly">Monthly</option>
+                      <option value="year_end">Year-End</option>
+                    </select>
+                  </td>
+                  <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
+                    <button onClick={() => {
+                      const updated = editingEmp.salary_structure.filter((_, i) => i !== idx);
+                      setEditingEmp({...editingEmp, salary_structure: updated});
+                    }} style={{ background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer' }}>✕</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button onClick={() => {
+             const newComp = { id: Date.now().toString(), name: 'New Component', type: 'earnings_allowance', amount: 0, taxSchedule: 'monthly' };
+             setEditingEmp({...editingEmp, salary_structure: [...editingEmp.salary_structure, newComp]});
+          }} style={{ marginTop: 12, padding: '6px 12px', background: '#e2e8f0', border: 'none', borderRadius: 6, fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>+ Add Component</button>
+        </SectionCard>
+
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 24 }}>
+          <button onClick={() => setEditingEmp(null)} style={{ padding: '10px 20px', background: '#e2e8f0', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }}>Cancel</button>
+          <button onClick={handleSave} style={{ padding: '10px 24px', background: '#4f46e5', color: 'white', border: 'none', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}>Save Employee</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <SectionCard title="Employee Roster" icon="👥" action={<button onClick={handleAdd} style={{ padding: '6px 14px', background: '#4f46e5', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 600 }}>+ Add Employee</button>}>
+      {loading ? (
+        <div style={{ padding: 40, textAlign: 'center', color: '#94a3b8' }}>Loading employees...</div>
+      ) : employees.length === 0 ? (
+        <div style={{ padding: 40, textAlign: 'center', color: '#94a3b8' }}>No employees found. Add your first employee to get started.</div>
+      ) : (
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+            <thead>
+              <tr style={{ background: '#f1f5f9' }}>
+                {['Code', 'Name', 'Department / Designation', 'Status', 'Actions'].map(h => (
+                  <th key={h} style={{ padding: '12px', textAlign: 'left', fontWeight: 700, color: '#475569', borderBottom: '2px solid #e2e8f0' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {employees.map(e => (
+                <tr key={e.id} className="ops-emp-row">
+                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9', fontFamily: 'monospace' }}>{e.emp_code}</td>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9', fontWeight: 600 }}>{e.name}</td>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>
+                    <div style={{ fontWeight: 600 }}>{e.department}</div>
+                    <div style={{ fontSize: 11, color: '#64748b' }}>{e.designation}</div>
+                  </td>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>
+                    <span style={{ padding: '2px 8px', borderRadius: 12, fontSize: 10, fontWeight: 700, background: e.is_active ? '#dcfce7' : '#fee2e2', color: e.is_active ? '#15803d' : '#b91c1c' }}>
+                      {e.is_active ? 'ACTIVE' : 'INACTIVE'}
+                    </span>
+                  </td>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>
+                    <div style={{ display: 'flex', gap: 10 }}>
+                      <button onClick={() => setEditingEmp(e)} style={{ background: 'none', border: 'none', color: '#4f46e5', cursor: 'pointer', fontWeight: 600 }}>Edit</button>
+                      <button onClick={() => handleDelete(e.id)} style={{ background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer', fontWeight: 600 }}>Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </SectionCard>
+  );
+}
+
+// ── Existing Sections ────────────────────────────────────────────────────────
+
 function CompanyProfile({ s, update }) {
   return (
     <>
@@ -74,7 +262,6 @@ function CompanyProfile({ s, update }) {
   );
 }
 
-// ── Section: Statutory ────────────────────────────────────────────────────────
 function StatutoryCompliance({ s, update }) {
   return (
     <>
@@ -89,9 +276,9 @@ function StatutoryCompliance({ s, update }) {
               <option value="prorated_ceiling">Prorated Ceiling</option>
             </select>
           </Field>
-          <Field label="VPF %" hint="Voluntary PF over statutory"><input type="number" min="0" max="100" value={s.vpfPercent} onChange={e => update('vpfPercent', Number(e.target.value))} style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, outline: 'none', width: '100%' }} /></Field>
-          <Field label="Admin Charges %"><input type="number" value={s.adminChargesPercent} onChange={e => update('adminChargesPercent', Number(e.target.value))} style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, outline: 'none', width: '100%' }} /></Field>
-          <Field label="EDLI Charges %"><input type="number" value={s.edliChargesPercent} onChange={e => update('edliChargesPercent', Number(e.target.value))} style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, outline: 'none', width: '100%' }} /></Field>
+          <Field label="VPF %" hint="Voluntary PF over statutory"><TextInput type="number" value={s.vpfPercent} onChange={v => update('vpfPercent', Number(v))} /></Field>
+          <Field label="Admin Charges %"><TextInput type="number" value={s.adminChargesPercent} onChange={v => update('adminChargesPercent', Number(v))} /></Field>
+          <Field label="EDLI Charges %"><TextInput type="number" value={s.edliChargesPercent} onChange={v => update('edliChargesPercent', Number(v))} /></Field>
         </Grid>
       </SectionCard>
       <SectionCard title="ESIC" icon="🏥">
@@ -99,7 +286,7 @@ function StatutoryCompliance({ s, update }) {
           <Field label="ESIC Employer Code"><TextInput value={s.esicCode} onChange={v => update('esicCode', v)} /></Field>
           <Field label="Registration Date"><TextInput value={s.esicRegDate} onChange={v => update('esicRegDate', v)} placeholder="YYYY-MM-DD" /></Field>
           <Field label="ESIC Region"><TextInput value={s.esicRegion} onChange={v => update('esicRegion', v)} /></Field>
-          <Field label="Wage Ceiling (₹)" hint="Employees below this ceiling are covered"><input type="number" value={s.esicWageCeiling} onChange={e => update('esicWageCeiling', Number(e.target.value))} style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, outline: 'none', width: '100%' }} /></Field>
+          <Field label="Wage Ceiling (₹)" hint="Employees below this ceiling are covered"><TextInput type="number" value={s.esicWageCeiling} onChange={v => update('esicWageCeiling', Number(v))} /></Field>
         </Grid>
       </SectionCard>
       <SectionCard title="Professional Tax" icon="🏛️">
@@ -138,44 +325,19 @@ function StatutoryCompliance({ s, update }) {
           + Add State
         </button>
       </SectionCard>
-      <SectionCard title="Income Tax / TDS" icon="📑">
-        <Grid cols={2}>
-          <Field label="Default Tax Regime">
-            <select value={s.defaultTaxRegime} onChange={e => update('defaultTaxRegime', e.target.value)} style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, outline: 'none' }}>
-              <option value="new">New Regime (FY 26-27 Default)</option>
-              <option value="old">Old Regime</option>
-            </select>
-          </Field>
-          <Field label="Allow Employee Override">
-            <select value={String(s.allowEmployeeRegimeOverride)} onChange={e => update('allowEmployeeRegimeOverride', e.target.value === 'true')} style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, outline: 'none' }}>
-              <option value="true">Yes — Employee can choose regime</option>
-              <option value="false">No — Company default applies</option>
-            </select>
-          </Field>
-        </Grid>
-      </SectionCard>
     </>
   );
 }
 
-// ── Section: Payroll Cycle ────────────────────────────────────────────────────
 function PayrollCycleSettings({ s, update }) {
   return (
     <SectionCard title="Payroll Cycle Configuration" icon="🔄">
       <Grid cols={3}>
         <Field label="Pay Cycle"><TextInput value={s.payCycleType} disabled /></Field>
-        <Field label="Pay Period Start (Day)" hint="e.g. 1 for 1st of month">
-          <input type="number" min="1" max="31" value={s.payPeriodStart} onChange={e => update('payPeriodStart', Number(e.target.value))} style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, outline: 'none', width: '100%' }} />
-        </Field>
-        <Field label="Pay Period End (Day)">
-          <input type="number" min="1" max="31" value={s.payPeriodEnd} onChange={e => update('payPeriodEnd', Number(e.target.value))} style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, outline: 'none', width: '100%' }} />
-        </Field>
-        <Field label="Attendance Cut-off Date" hint="Last date for attendance inputs">
-          <input type="number" min="1" max="31" value={s.attendanceCutoffDate} onChange={e => update('attendanceCutoffDate', Number(e.target.value))} style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, outline: 'none', width: '100%' }} />
-        </Field>
-        <Field label="Salary Disbursement Date (next month)">
-          <input type="number" min="1" max="10" value={s.disbursementDate} onChange={e => update('disbursementDate', Number(e.target.value))} style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, outline: 'none', width: '100%' }} />
-        </Field>
+        <Field label="Pay Period Start (Day)"><TextInput type="number" value={s.payPeriodStart} onChange={v => update('payPeriodStart', Number(v))} /></Field>
+        <Field label="Pay Period End (Day)"><TextInput type="number" value={s.payPeriodEnd} onChange={v => update('payPeriodEnd', Number(v))} /></Field>
+        <Field label="Attendance Cut-off Date"><TextInput type="number" value={s.attendanceCutoffDate} onChange={v => update('attendanceCutoffDate', Number(v))} /></Field>
+        <Field label="Salary Disbursement Date"><TextInput type="number" value={s.disbursementDate} onChange={v => update('disbursementDate', Number(v))} /></Field>
         <Field label="LOP Calculation Method">
           <select value={s.lopCalculationMethod} onChange={e => update('lopCalculationMethod', e.target.value)} style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, outline: 'none' }}>
             <option value="calendar">Calendar Days</option>
@@ -189,18 +351,11 @@ function PayrollCycleSettings({ s, update }) {
             <option value="fixed30">Fixed 30 days</option>
           </select>
         </Field>
-        <Field label="Auto-lock after Disbursement">
-          <select value={String(s.autoLockAfterDisbursement)} onChange={e => update('autoLockAfterDisbursement', e.target.value === 'true')} style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, outline: 'none' }}>
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-          </select>
-        </Field>
       </Grid>
     </SectionCard>
   );
 }
 
-// ── Section: Bank Integration ─────────────────────────────────────────────────
 function BankIntegration({ s, update }) {
   return (
     <SectionCard title="Bank & Payment Integration" icon="🏦">
@@ -218,16 +373,12 @@ function BankIntegration({ s, update }) {
             <option>HDFC</option><option>ICICI</option><option>SBI</option><option>Axis</option><option>Generic CSV</option>
           </select>
         </Field>
-        <Field label="Credit Narration Template" hint="Variables: {MONTH}, {YEAR}, {COMPANY}, {EMPCODE}">
-          <TextInput value={s.creditNarration} onChange={v => update('creditNarration', v)} placeholder="SALARY {MONTH} {YEAR}" />
-        </Field>
       </Grid>
     </SectionCard>
   );
 }
 
-// ── Section: Default Salary Structure ─────────────────────────────────────────
-function SalaryStructure({ s, update }) {
+function SalaryStructureTemplate({ s, update }) {
   const TYPE_LABELS = {
     earnings_basic: 'Basic', earnings_hra: 'HRA', earnings_allowance: 'Allowance',
     variable: 'Variable', reimbursement: 'Reimbursement',
@@ -248,15 +399,13 @@ function SalaryStructure({ s, update }) {
 
   return (
     <SectionCard title="Default Salary Structure Template" icon="⚙️">
-      <p style={{ fontSize: 12, color: '#64748b', marginBottom: 16 }}>
-        These components will be pre-populated for every new employee. Amounts can be overridden per employee.
-      </p>
+      <p style={{ fontSize: 12, color: '#64748b', marginBottom: 16 }}>These components will be pre-populated for every new employee.</p>
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
           <thead>
             <tr style={{ background: '#f1f5f9' }}>
-              {['Component Name', 'Type', 'Default Amount / Formula', 'Tax Schedule', ''].map(h => (
-                <th key={h} style={{ padding: '8px 10px', textAlign: 'left', fontWeight: 700, color: '#334155', borderBottom: '2px solid #e2e8f0', whiteSpace: 'nowrap' }}>{h}</th>
+              {['Component', 'Type', 'Matrix ID', 'Amount / Formula', 'Tax Schedule', ''].map(h => (
+                <th key={h} style={{ padding: '8px 10px', textAlign: 'left', fontWeight: 700, borderBottom: '2px solid #e2e8f0' }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -272,6 +421,9 @@ function SalaryStructure({ s, update }) {
                   </select>
                 </td>
                 <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
+                  <input value={c.matrixId} onChange={e => updateComp(c.id, 'matrixId', e.target.value)} placeholder="e.g. basic" style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px 8px', width: '100%', fontSize: 11, fontFamily: 'monospace' }} />
+                </td>
+                <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
                   <input value={c.amount} onChange={e => updateComp(c.id, 'amount', e.target.value)} style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px 8px', width: '100%', fontSize: 12, fontFamily: 'monospace' }} />
                 </td>
                 <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
@@ -281,80 +433,82 @@ function SalaryStructure({ s, update }) {
                   </select>
                 </td>
                 <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
-                  <button onClick={() => removeComp(c.id)} style={{ background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer', fontWeight: 700 }}>✕</button>
+                  <button onClick={() => removeComp(c.id)} style={{ background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer' }}>✕</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <button onClick={addComp} style={{ marginTop: 12, padding: '6px 14px', background: '#e2e8f0', color: '#334155', border: 'none', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 600 }}>
-        + Add Component
-      </button>
+      <button onClick={addComp} style={{ marginTop: 12, padding: '6px 14px', background: '#e2e8f0', border: 'none', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 600 }}>+ Add Component</button>
     </SectionCard>
   );
 }
 
 // ── Main CompanySettingsTab ───────────────────────────────────────────────────
 export default function CompanySettingsTab() {
-  const [settings, setSettings] = useState(() => loadSettings());
+  const [settings, setSettings] = useState(() => getDefaults());
   const [activeSection, setActiveSection] = useState('company');
+  const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    async function load() {
+      setLoading(true);
+      try {
+        const remote = await getCompanySettings();
+        if (remote) setSettings(prev => ({ ...prev, ...remote }));
+      } catch (e) { console.error(e); }
+      setLoading(false);
+    }
+    load();
+  }, []);
 
   const update = (field, value) => setSettings(prev => ({ ...prev, [field]: value }));
 
-  const handleSave = () => {
-    saveSettings(settings);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+  const handleSave = async () => {
+    try {
+      await saveCompanySettings(settings);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } catch (e) { alert('Error saving settings: ' + e.message); }
   };
 
   const renderSection = () => {
+    if (loading) return <div style={{ padding: 40, textAlign: 'center', color: '#94a3b8' }}>Loading settings...</div>;
     switch (activeSection) {
       case 'company':    return <CompanyProfile s={settings} update={update} />;
       case 'statutory':  return <StatutoryCompliance s={settings} update={update} />;
       case 'cycle':      return <PayrollCycleSettings s={settings} update={update} />;
       case 'bank':       return <BankIntegration s={settings} update={update} />;
-      case 'structure':  return <SalaryStructure s={settings} update={update} />;
+      case 'structure':  return <SalaryStructureTemplate s={settings} update={update} />;
+      case 'employees':  return <EmployeeManagement settings={settings} />;
       default:           return null;
     }
   };
 
   return (
     <div className="module-settings-root">
-      {/* Header */}
       <div className="module-header" style={{ borderBottom: '4px solid #3b82f6' }}>
         <h2 className="tab-heading">⚙️ Company Settings</h2>
-        <p className="tab-subheading">Configure statutory registrations, payroll cycle, bank integration, and salary structure templates.</p>
+        <p className="tab-subheading">Persistently configure your company and manage your employee roster.</p>
       </div>
 
       <div className="settings-layout">
-        {/* Left rail nav */}
         <nav className="settings-sidenav">
           {SECTIONS.map(s => (
-            <button
-              key={s.id}
-              onClick={() => setActiveSection(s.id)}
-              className={`settings-nav-btn ${activeSection === s.id ? 'settings-nav-btn--active' : ''}`}
-            >
+            <button key={s.id} onClick={() => setActiveSection(s.id)} className={`settings-nav-btn ${activeSection === s.id ? 'settings-nav-btn--active' : ''}`}>
               <span>{s.icon}</span>
               <span>{s.label}</span>
             </button>
           ))}
           <div style={{ marginTop: 'auto', paddingTop: 16 }}>
-            <button
-              onClick={handleSave}
-              style={{ width: '100%', padding: '10px', background: saved ? '#10b981' : '#2563eb', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 700, fontSize: 13, transition: 'background 0.3s' }}
-            >
+            <button onClick={handleSave} style={{ width: '100%', padding: '10px', background: saved ? '#10b981' : '#2563eb', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 700, fontSize: 13 }}>
               {saved ? '✓ Saved!' : '💾 Save Settings'}
             </button>
           </div>
         </nav>
-
-        {/* Right content area */}
-        <div className="settings-content">
-          {renderSection()}
-        </div>
+        <div className="settings-content">{renderSection()}</div>
       </div>
     </div>
   );

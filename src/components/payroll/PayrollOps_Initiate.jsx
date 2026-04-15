@@ -33,8 +33,9 @@ export default function PayrollOps_Initiate({ store, onInitiate, onOpenPayrun })
 
   const selectedEmps = store.employees.filter(e => selected.includes(e.id));
   const totalCTC = selectedEmps.reduce((sum, e) => {
-    const basic = e.salaryComponents.filter(c => c.type === 'earnings_basic').reduce((s, c) => s + Number(c.amount || 0), 0);
-    const gross = e.salaryComponents.filter(c => ['earnings_basic','earnings_hra','earnings_allowance','variable'].includes(c.type)).reduce((s, c) => s + Number(c.amount || 0), 0);
+    const gross = (e.salary_structure || [])
+      .filter(c => ['earnings_basic','earnings_hra','earnings_allowance','variable'].includes(c.type))
+      .reduce((s, c) => s + Number(c.amount || 0), 0);
     return sum + gross;
   }, 0);
 
@@ -88,7 +89,7 @@ export default function PayrollOps_Initiate({ store, onInitiate, onOpenPayrun })
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
                 <thead>
                   <tr style={{ background: '#f1f5f9' }}>
-                    {['','Emp Code','Name','Designation','Department','Band','Joining Date','State','Regime'].map(h => (
+                    {['','Emp Code','Name','Designation','Department','Joining Date','Regime'].map(h => (
                       <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontWeight: 700, color: '#334155', borderBottom: '2px solid #e2e8f0', whiteSpace: 'nowrap' }}>{h}</th>
                     ))}
                   </tr>
@@ -99,16 +100,14 @@ export default function PayrollOps_Initiate({ store, onInitiate, onOpenPayrun })
                       <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9' }}>
                         <input type="checkbox" checked={selected.includes(e.id)} onChange={() => toggleEmp(e.id)} onClick={ev => ev.stopPropagation()} />
                       </td>
-                      <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', fontFamily: 'monospace', fontSize: 12 }}>{e.empCode}</td>
+                      <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', fontFamily: 'monospace', fontSize: 12 }}>{e.emp_code}</td>
                       <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', fontWeight: 600 }}>{e.name}</td>
                       <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', color: '#64748b' }}>{e.designation}</td>
                       <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9' }}>{e.department}</td>
-                      <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9' }}><span style={{ background: '#e0e7ff', color: '#3730a3', padding: '2px 6px', borderRadius: 4, fontSize: 11, fontWeight: 700 }}>{e.band}</span></td>
-                      <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', color: '#64748b' }}>{e.dateOfJoining}</td>
-                      <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9' }}>{e.selectedState}</td>
+                      <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', color: '#64748b' }}>{e.date_of_joining}</td>
                       <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9' }}>
-                        <span style={{ background: e.taxRegime === 'new' ? '#d1fae5' : '#fef3c7', color: e.taxRegime === 'new' ? '#065f46' : '#b45309', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>
-                          {e.taxRegime === 'new' ? 'New' : 'Old'}
+                        <span style={{ background: (e.tax_regime || 'new') === 'new' ? '#d1fae5' : '#fef3c7', color: (e.tax_regime || 'new') === 'new' ? '#065f46' : '#b45309', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>
+                          {(e.tax_regime || 'new').toUpperCase()}
                         </span>
                       </td>
                     </tr>
@@ -133,13 +132,13 @@ export default function PayrollOps_Initiate({ store, onInitiate, onOpenPayrun })
           <div style={{ padding: '14px 20px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
             <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700 }}>Payrun History</h3>
           </div>
-          {store.payruns.length === 0 ? (
+          {(store.payruns || []).length === 0 ? (
             <div style={{ padding: 40, textAlign: 'center', color: '#94a3b8' }}>No payruns yet. Start by creating a new payrun above.</div>
           ) : (
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
               <thead>
                 <tr style={{ background: '#f1f5f9' }}>
-                  {['Payrun ID','Month','Employees','Initiated','Status',''].map(h => (
+                  {['Payrun ID','Month','Started On','Status',''].map(h => (
                     <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontWeight: 700, color: '#334155', borderBottom: '2px solid #e2e8f0' }}>{h}</th>
                   ))}
                 </tr>
@@ -149,10 +148,9 @@ export default function PayrollOps_Initiate({ store, onInitiate, onOpenPayrun })
                   const sc = STATUS_COLORS[p.status] || STATUS_COLORS.initiated;
                   return (
                     <tr key={p.id}>
-                      <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', fontFamily: 'monospace', fontSize: 11 }}>{p.id}</td>
-                      <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', fontWeight: 600 }}>{p.monthLabel}</td>
-                      <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9' }}>{p.employeeIds.length}</td>
-                      <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', color: '#64748b' }}>{new Date(p.initiatedAt).toLocaleDateString('en-IN')}</td>
+                      <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', fontFamily: 'monospace', fontSize: 11 }}>{p.id.substring(0, 8)}...</td>
+                      <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', fontWeight: 600 }}>{p.month_year}</td>
+                      <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', color: '#64748b' }}>{new Date(p.created_at).toLocaleDateString('en-IN')}</td>
                       <td style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9' }}>
                         <span style={{ background: sc.bg, color: sc.color, padding: '3px 10px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>{sc.label}</span>
                       </td>

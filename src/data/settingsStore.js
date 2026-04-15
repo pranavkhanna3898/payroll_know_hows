@@ -79,21 +79,6 @@ const DEFAULTS = {
   ],
 };
 
-const STORAGE_KEY = 'payroll_company_settings';
-
-export const loadSettings = () => {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? { ...DEFAULTS, ...JSON.parse(stored) } : { ...DEFAULTS };
-  } catch {
-    return { ...DEFAULTS };
-  }
-};
-
-export const saveSettings = (settings) => {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-  } catch { /* quota exceeded — fail gracefully */ }
-};
+export const getDefaults = () => JSON.parse(JSON.stringify(DEFAULTS));
 
 export default DEFAULTS;
