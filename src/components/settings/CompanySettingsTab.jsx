@@ -5,6 +5,11 @@ import {
   getCompanySettings, saveCompanySettings, 
   getEmployees, upsertEmployee, deleteEmployee 
 } from '../../data/api';
+import { CATEGORIES } from '../../data/categories';
+
+const MATRIX_COMPONENTS = CATEGORIES.flatMap(cat => 
+  cat.components.map(comp => ({ ...comp, categoryId: cat.id }))
+);
 
 const SECTIONS = [
   { id: 'company',    icon: '🏢', label: 'Company Profile' },
@@ -140,39 +145,97 @@ function EmployeeManagement({ settings }) {
               </tr>
             </thead>
             <tbody>
-              {editingEmp.salary_structure.map((c, idx) => (
-                <tr key={c.id}>
-                  <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>{c.name}</td>
-                  <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0', fontSize: 10, color: '#64748b' }}>{c.type}</td>
-                  <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
-                    <input value={c.amount} onChange={e => {
-                      const updated = editingEmp.salary_structure.map((item, i) => i === idx ? { ...item, amount: e.target.value } : item);
-                      setEditingEmp({...editingEmp, salary_structure: updated});
-                    }} style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px 8px', width: '100%', fontSize: 12, fontFamily: 'monospace' }} />
-                  </td>
-                  <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
-                    <select value={c.taxSchedule} onChange={e => {
-                      const updated = editingEmp.salary_structure.map((item, i) => i === idx ? { ...item, taxSchedule: e.target.value } : item);
-                      setEditingEmp({...editingEmp, salary_structure: updated});
-                    }} style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px', fontSize: 12 }}>
-                      <option value="monthly">Monthly</option>
-                      <option value="year_end">Year-End</option>
-                    </select>
-                  </td>
-                  <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
-                    <button onClick={() => {
-                      const updated = editingEmp.salary_structure.filter((_, i) => i !== idx);
-                      setEditingEmp({...editingEmp, salary_structure: updated});
-                    }} style={{ background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer' }}>✕</button>
-                  </td>
-                </tr>
-              ))}
+              {editingEmp.salary_structure.map((c, idx) => {
+                const isCustom = !c.matrixId || c.matrixId === 'custom';
+                return (
+                  <tr key={c.id}>
+                    <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                        <select
+                          value={c.matrixId || 'custom'}
+                          onChange={e => {
+                            const val = e.target.value;
+                            const updated = [...editingEmp.salary_structure];
+                            if (val === 'custom') {
+                              updated[idx] = { ...c, matrixId: 'custom', name: '' };
+                            } else {
+                              const matched = MATRIX_COMPONENTS.find(m => m.id === val);
+                              updated[idx] = { ...c, matrixId: val, name: matched.name, type: matched.type };
+                            }
+                            setEditingEmp({...editingEmp, salary_structure: updated});
+                          }}
+                          style={{ border: '1px solid #cbd5e1', borderRadius: 4, padding: '4px', fontSize: 11, width: '100%' }}
+                        >
+                          <option value="custom">-- Custom --</option>
+                          {CATEGORIES.map(cat => (
+                            <optgroup key={cat.id} label={cat.name}>
+                              {cat.components.map(comp => (
+                                <option key={comp.id} value={comp.id}>{comp.name}</option>
+                              ))}
+                            </optgroup>
+                          ))}
+                        </select>
+                        {isCustom && (
+                          <input 
+                            value={c.name} 
+                            onChange={e => {
+                              const updated = editingEmp.salary_structure.map((item, i) => i === idx ? { ...item, name: e.target.value } : item);
+                              setEditingEmp({...editingEmp, salary_structure: updated});
+                            }} 
+                            placeholder="Component Name..."
+                            style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px 8px', width: '100%', fontSize: 11 }} 
+                          />
+                        )}
+                      </div>
+                    </td>
+                    <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
+                      <select 
+                        value={c.type} 
+                        onChange={e => {
+                          const updated = editingEmp.salary_structure.map((item, i) => i === idx ? { ...item, type: e.target.value } : item);
+                          setEditingEmp({...editingEmp, salary_structure: updated});
+                        }}
+                        style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px', fontSize: 11, width: '100%' }}
+                      >
+                        <option value="earnings_basic">Basic</option>
+                        <option value="earnings_hra">HRA</option>
+                        <option value="earnings_allowance">Allowance</option>
+                        <option value="variable">Variable</option>
+                        <option value="reimbursement">Reimbursement</option>
+                        <option value="employer_contrib">Employer Share</option>
+                        <option value="employee_deduction">Employee Deduction</option>
+                      </select>
+                    </td>
+                    <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
+                      <input value={c.amount} onChange={e => {
+                        const updated = editingEmp.salary_structure.map((item, i) => i === idx ? { ...item, amount: e.target.value } : item);
+                        setEditingEmp({...editingEmp, salary_structure: updated});
+                      }} style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px 8px', width: '100%', fontSize: 12, fontFamily: 'monospace' }} />
+                    </td>
+                    <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
+                      <select value={c.taxSchedule} onChange={e => {
+                        const updated = editingEmp.salary_structure.map((item, i) => i === idx ? { ...item, taxSchedule: e.target.value } : item);
+                        setEditingEmp({...editingEmp, salary_structure: updated});
+                      }} style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px', fontSize: 11, width: '100%' }}>
+                        <option value="monthly">Monthly</option>
+                        <option value="year_end">Year-End</option>
+                      </select>
+                    </td>
+                    <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0', textAlign: 'center' }}>
+                      <button onClick={() => {
+                        const updated = editingEmp.salary_structure.filter((_, i) => i !== idx);
+                        setEditingEmp({...editingEmp, salary_structure: updated});
+                      }} style={{ background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer', fontSize: 14 }}>✕</button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
           <button onClick={() => {
-             const newComp = { id: Date.now().toString(), name: 'New Component', type: 'earnings_allowance', amount: 0, taxSchedule: 'monthly' };
+             const newComp = { id: Date.now().toString(), name: '', type: 'earnings_allowance', amount: 0, matrixId: 'custom', taxSchedule: 'monthly' };
              setEditingEmp({...editingEmp, salary_structure: [...editingEmp.salary_structure, newComp]});
-          }} style={{ marginTop: 12, padding: '6px 12px', background: '#e2e8f0', border: 'none', borderRadius: 6, fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>+ Add Component</button>
+          }} style={{ marginTop: 12, padding: '6px 14px', background: '#e2e8f0', border: 'none', borderRadius: 6, fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>+ Add Component</button>
         </SectionCard>
 
         <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 24 }}>
@@ -404,39 +467,74 @@ function SalaryStructureTemplate({ s, update }) {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
           <thead>
             <tr style={{ background: '#f1f5f9' }}>
-              {['Component', 'Type', 'Matrix ID', 'Amount / Formula', 'Tax Schedule', ''].map(h => (
+              {['Component', 'Type', 'Amount / Formula', 'Tax Schedule', ''].map(h => (
                 <th key={h} style={{ padding: '8px 10px', textAlign: 'left', fontWeight: 700, borderBottom: '2px solid #e2e8f0' }}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {s.defaultSalaryComponents.map(c => (
-              <tr key={c.id}>
-                <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
-                  <input value={c.name} onChange={e => updateComp(c.id, 'name', e.target.value)} style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px 8px', width: '100%', fontSize: 12 }} />
-                </td>
-                <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
-                  <select value={c.type} onChange={e => updateComp(c.id, 'type', e.target.value)} style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px', fontSize: 12 }}>
-                    {Object.entries(TYPE_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-                  </select>
-                </td>
-                <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
-                  <input value={c.matrixId} onChange={e => updateComp(c.id, 'matrixId', e.target.value)} placeholder="e.g. basic" style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px 8px', width: '100%', fontSize: 11, fontFamily: 'monospace' }} />
-                </td>
-                <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
-                  <input value={c.amount} onChange={e => updateComp(c.id, 'amount', e.target.value)} style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px 8px', width: '100%', fontSize: 12, fontFamily: 'monospace' }} />
-                </td>
-                <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
-                  <select value={c.taxSchedule} onChange={e => updateComp(c.id, 'taxSchedule', e.target.value)} style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px', fontSize: 12 }}>
-                    <option value="monthly">Monthly</option>
-                    <option value="year_end">Year-End</option>
-                  </select>
-                </td>
-                <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
-                  <button onClick={() => removeComp(c.id)} style={{ background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer' }}>✕</button>
-                </td>
-              </tr>
-            ))}
+            {s.defaultSalaryComponents.map((c, idx) => {
+              const isCustom = !c.matrixId || c.matrixId === 'custom';
+              return (
+                <tr key={c.id}>
+                  <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                      <select
+                        value={c.matrixId || 'custom'}
+                        onChange={e => {
+                          const val = e.target.value;
+                          if (val === 'custom') {
+                            updateComp(c.id, 'matrixId', 'custom');
+                            updateComp(c.id, 'name', '');
+                          } else {
+                            const matched = MATRIX_COMPONENTS.find(m => m.id === val);
+                            updateComp(c.id, 'matrixId', val);
+                            updateComp(c.id, 'name', matched.name);
+                            updateComp(c.id, 'type', matched.type);
+                          }
+                        }}
+                        style={{ border: '1px solid #cbd5e1', borderRadius: 4, padding: '4px', fontSize: 11, width: '100%' }}
+                      >
+                        <option value="custom">-- Custom --</option>
+                        {CATEGORIES.map(cat => (
+                          <optgroup key={cat.id} label={cat.name}>
+                            {cat.components.map(comp => (
+                              <option key={comp.id} value={comp.id}>{comp.name}</option>
+                            ))}
+                          </optgroup>
+                        ))}
+                      </select>
+                      {isCustom && (
+                        <input value={c.name} onChange={e => updateComp(c.id, 'name', e.target.value)} placeholder="Name..." style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px 8px', width: '100%', fontSize: 11 }} />
+                      )}
+                    </div>
+                  </td>
+                  <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
+                    <select value={c.type} onChange={e => updateComp(c.id, 'type', e.target.value)} style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px', fontSize: 11, width: '100%' }}>
+                      <option value="earnings_basic">Basic</option>
+                      <option value="earnings_hra">HRA</option>
+                      <option value="earnings_allowance">Allowance</option>
+                      <option value="variable">Variable</option>
+                      <option value="reimbursement">Reimbursement</option>
+                      <option value="employer_contrib">Employer Share</option>
+                      <option value="employee_deduction">Employee Deduction</option>
+                    </select>
+                  </td>
+                  <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
+                    <input value={c.amount} onChange={e => updateComp(c.id, 'amount', e.target.value)} style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px 8px', width: '100%', fontSize: 12, fontFamily: 'monospace' }} />
+                  </td>
+                  <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0' }}>
+                    <select value={c.taxSchedule} onChange={e => updateComp(c.id, 'taxSchedule', e.target.value)} style={{ border: '1px solid #e2e8f0', borderRadius: 4, padding: '4px', fontSize: 11, width: '100%' }}>
+                      <option value="monthly">Monthly</option>
+                      <option value="year_end">Year-End</option>
+                    </select>
+                  </td>
+                  <td style={{ padding: '6px 10px', borderBottom: '1px solid #e2e8f0', textAlign: 'center' }}>
+                    <button onClick={() => removeComp(c.id)} style={{ background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer', fontSize: 14 }}>✕</button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

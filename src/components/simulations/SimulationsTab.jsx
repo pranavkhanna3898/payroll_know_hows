@@ -8,7 +8,7 @@ import Step3_NetPay from './Step3_NetPay';
 import Step4_BankFile from './Step4_BankFile';
 import Step5_Statutory from './Step5_Statutory';
 import { CATEGORIES } from '../../data/categories';
-import { computeEmployeePayroll } from '../../data/payrollEngine';
+import { computeEmployeePayroll, evaluateTaxLiability } from '../../data/payrollEngine';
 
 const MATRIX_COMPONENTS = CATEGORIES.flatMap(cat => cat.components);
 
@@ -150,11 +150,27 @@ export default function SimulationsTab() {
 
   // Shared derived calculations using the common engine
   const computed = computeEmployeePayroll(data);
+  const { annualTax, taxableIncome, tds, monthlyReimbursements, annualGross, taxRegime, investments80C, medical80D, isMetro, standardHRA, projectedAnnualBasic, projectedAnnualHRA, annualRent } = computed;
+
+  // Compute "what-if" projection: What if reimbursements are NOT submitted and become fully taxable?
+  // We do this by evaluating tax with calculatedHraExempt: 0 and annualGross including the reims
+  const projectedTaxObj = evaluateTaxLiability({
+    annualGross: annualGross + (data.reimbursementTaxStrategy === 'year_end' ? monthlyReimbursements * 12 : 0),
+    taxRegime,
+    investments80C,
+    medical80D,
+    isMetro,
+    standardHRA,
+    projectedAnnualBasic,
+    projectedAnnualHRA,
+    annualRent,
+  });
 
   const simState = {
     ...data,
     ...computed,
     setData, updateData, updateComponent, addComponent, removeComponent, addArrearEntry, updateArrearEntry, removeArrearEntry,
+    projectedTaxObj,
   };
 
   return (
