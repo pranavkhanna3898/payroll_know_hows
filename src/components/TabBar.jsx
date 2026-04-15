@@ -4,6 +4,8 @@ const TABS = [
   { id: "lwf", label: "⚖️ Labour Welfare Fund" },
   { id: "cycle", label: "🔄 Payroll Cycle & Flow" },
   { id: "simulations", label: "⚙️ Simulations" },
+  { id: "settings", label: "🏢 Company Settings" },
+  { id: "payroll", label: "▶️ Payroll Operations" },
   { id: "detail", label: "📋 Component Detail" },
 ];
 

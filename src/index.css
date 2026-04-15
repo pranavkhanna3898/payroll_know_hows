@@ -1211,3 +1211,245 @@ body {
   z-index: 100;
   pointer-events: none;
 }
+
+/* =============================================
+   Module: Company Settings
+   ============================================= */
+.module-header {
+  background: white;
+  padding: 24px 32px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.tab-heading {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.tab-subheading {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.settings-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: calc(100vh - 200px);
+}
+
+.settings-sidenav {
+  background: #f8fafc;
+  border-right: 1px solid #e2e8f0;
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settings-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  text-align: left;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.settings-nav-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.settings-nav-btn--active {
+  background: white;
+  color: #1e40af;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  border: 1px solid #dbeafe;
+}
+
+.settings-content {
+  padding: 28px 32px;
+  max-width: 960px;
+  overflow-y: auto;
+}
+
+/* =============================================
+   Module: Payroll Operations
+   ============================================= */
+.module-ops-root {
+  min-height: calc(100vh - 180px);
+  background: #f8fafc;
+}
+
+.ops-payrun-badge {
+  display: inline-block;
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-left: 10px;
+}
+
+/* Step Tracker */
+.ops-step-tracker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 24px 32px 16px;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.ops-step-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.ops-step-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 20px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  background: transparent;
+  transition: all 0.2s ease;
+  min-width: 100px;
+  font-family: inherit;
+}
+
+.ops-step-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 800;
+  transition: all 0.2s;
+}
+
+.ops-step-label {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ops-step-btn--active {
+  border-color: #3b82f6;
+  background: #f0f9ff;
+}
+.ops-step-btn--active .ops-step-icon {
+  background: #2563eb;
+  color: white;
+}
+.ops-step-btn--active .ops-step-label {
+  color: #1e40af;
+}
+
+.ops-step-btn--done .ops-step-icon {
+  background: #d1fae5;
+  color: #065f46;
+}
+.ops-step-btn--done .ops-step-label {
+  color: #047857;
+}
+
+.ops-step-btn--pending .ops-step-icon {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+.ops-step-btn--pending .ops-step-label {
+  color: #94a3b8;
+}
+
+.ops-step-connector {
+  width: 48px;
+  height: 3px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  transition: background 0.3s;
+}
+.ops-step-connector--done {
+  background: #10b981;
+}
+
+.ops-content {
+  padding: 28px 32px;
+}
+
+/* Employee row hover */
+.ops-emp-row:hover {
+  background: #f8fafc !important;
+}
+.ops-emp-row:hover td {
+  color: #0f172a;
+}
+
+/* ---- Print Styles for Salary Slips ---- */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #salary-slip-print,
+  #salary-slip-print * {
+    visibility: visible;
+  }
+  #salary-slip-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+  .ops-step-tracker,
+  .settings-sidenav,
+  .tab-bar,
+  .header,
+  .legend-bar {
+    display: none !important;
+  }
+}
+
+/* ---- Responsive for Settings and Ops ---- */
+@media (max-width: 768px) {
+  .settings-layout {
+    grid-template-columns: 1fr;
+  }
+  .settings-sidenav {
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 10px;
+  }
+  .ops-step-tracker {
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 16px;
+  }
+  .ops-step-btn {
+    min-width: 80px;
+    padding: 8px 12px;
+  }
+  .ops-step-connector {
+    width: 24px;
+  }
+}

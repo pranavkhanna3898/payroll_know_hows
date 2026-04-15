@@ -8,6 +8,8 @@ import LWFTab from './LWFTab';
 import CycleTab from './CycleTab';
 import DetailTab from './DetailTab';
 import SimulationsTab from './simulations/SimulationsTab';
+import CompanySettingsTab from './settings/CompanySettingsTab';
+import PayrollOpsTab from './payroll/PayrollOpsTab';
 
 export default function PayrollMatrix() {
   const [activeTab, setActiveTab] = useState("matrix");
@@ -44,6 +46,8 @@ export default function PayrollMatrix() {
         {activeTab === "lwf" && <LWFTab />}
         {activeTab === "cycle" && <CycleTab />}
         {activeTab === "simulations" && <SimulationsTab />}
+        {activeTab === "settings" && <CompanySettingsTab />}
+        {activeTab === "payroll" && <PayrollOpsTab />}
 
         {activeTab === "detail" && (
           <DetailTab
