@@ -6,6 +6,7 @@ import { supabase } from './supabaseClient';
 
 // --- Company Settings ---
 export async function getCompanySettings() {
+  if (!supabase) throw new Error('Supabase client not initialized');
   const { data, error } = await supabase
     .from('company_settings')
     .select('settings')
@@ -17,6 +18,7 @@ export async function getCompanySettings() {
 }
 
 export async function saveCompanySettings(settings) {
+  if (!supabase) throw new Error('Supabase client not initialized');
   // Try to get existing first
   const { data: existing } = await supabase
     .from('company_settings')
@@ -40,6 +42,7 @@ export async function saveCompanySettings(settings) {
 
 // --- Employees ---
 export async function getEmployees() {
+  if (!supabase) throw new Error('Supabase client not initialized');
   const { data, error } = await supabase
     .from('employees')
     .select('*')
@@ -50,6 +53,7 @@ export async function getEmployees() {
 }
 
 export async function upsertEmployee(employee) {
+  if (!supabase) throw new Error('Supabase client not initialized');
   const { id, created_at, updated_at, ...payload } = employee;
   
   if (id) {
@@ -73,6 +77,7 @@ export async function upsertEmployee(employee) {
 }
 
 export async function deleteEmployee(id) {
+  if (!supabase) throw new Error('Supabase client not initialized');
   const { error } = await supabase
     .from('employees')
     .delete()
@@ -82,6 +87,7 @@ export async function deleteEmployee(id) {
 
 // --- Payruns ---
 export async function getPayruns() {
+  if (!supabase) throw new Error('Supabase client not initialized');
   const { data, error } = await supabase
     .from('payruns')
     .select('*')
@@ -91,6 +97,7 @@ export async function getPayruns() {
 }
 
 export async function createPayrun(monthYear) {
+  if (!supabase) throw new Error('Supabase client not initialized');
   const { data, error } = await supabase
     .from('payruns')
     .insert({ month_year: monthYear, status: 'draft' })
@@ -101,6 +108,7 @@ export async function createPayrun(monthYear) {
 }
 
 export async function updatePayrunStatus(id, status) {
+  if (!supabase) throw new Error('Supabase client not initialized');
   const { error } = await supabase
     .from('payruns')
     .update({ status, updated_at: new Date() })
@@ -110,6 +118,7 @@ export async function updatePayrunStatus(id, status) {
 
 // --- Payrun Adjustments ---
 export async function getPayrunAdjustments(payrunId) {
+  if (!supabase) throw new Error('Supabase client not initialized');
   const { data, error } = await supabase
     .from('payrun_adjustments')
     .select('*')
@@ -119,6 +128,7 @@ export async function getPayrunAdjustments(payrunId) {
 }
 
 export async function savePayrunAdjustment(payrunId, employeeId, adjustments, computedData) {
+  if (!supabase) throw new Error('Supabase client not initialized');
   const { error } = await supabase
     .from('payrun_adjustments')
     .upsert({ 
