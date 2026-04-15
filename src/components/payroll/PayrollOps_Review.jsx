@@ -95,8 +95,8 @@ function EmpDetailPane({ emp, activePayrun, updateAdjustment, onClose }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {emp.salaryComponents.map(comp => {
-                    const resolved = comp._resolved ?? (Number(comp.amount) || 0);
+                  {c.components.map(comp => {
+                    const resolved = comp._resolved || 0;
                     const af = c.attendanceFactor;
                     const prorated = comp.type === 'variable' ? (comp.currentPayout || 0) : (
                       ['earnings_basic','earnings_hra','earnings_allowance'].includes(comp.type) ? resolved * af : resolved

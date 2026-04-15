@@ -79,18 +79,19 @@ function SalarySlip({ emp, monthLabel }) {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', color: '#334155' }}>Basic Salary</td>
-                <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', textAlign: 'right', fontFamily: 'monospace' }}>₹{fmt(c.basic)}</td>
-              </tr>
-              <tr>
-                <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', color: '#334155' }}>House Rent Allowance</td>
-                <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', textAlign: 'right', fontFamily: 'monospace' }}>₹{fmt(c.hra)}</td>
-              </tr>
-              {c.special > 0 && <tr>
-                <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', color: '#334155' }}>Special Allowance</td>
-                <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', textAlign: 'right', fontFamily: 'monospace' }}>₹{fmt(c.special)}</td>
-              </tr>}
+              {c.components.filter(cp => ['earnings_basic','earnings_hra','earnings_allowance','reimbursement'].includes(cp.type)).map(cp => {
+                const isReim = cp.type === 'reimbursement';
+                const amt = cp._resolved || 0;
+                if (amt === 0 && cp.type !== 'earnings_basic') return null;
+                return (
+                  <tr key={cp.id}>
+                    <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', color: isReim ? '#059669' : '#334155' }}>
+                      {cp.name} {isReim ? '(Reim)' : ''}
+                    </td>
+                    <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', textAlign: 'right', fontFamily: 'monospace' }}>₹{fmt(amt)}</td>
+                  </tr>
+                );
+              })}
               {c.variablePay > 0 && <tr>
                 <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', color: '#b45309' }}>Variable / Incentive Pay</td>
                 <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', textAlign: 'right', fontFamily: 'monospace', color: '#b45309' }}>₹{fmt(c.variablePay)}</td>
@@ -102,10 +103,6 @@ function SalarySlip({ emp, monthLabel }) {
               {c.arrearsPay > 0 && <tr>
                 <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', color: '#7c3aed' }}>Arrears</td>
                 <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', textAlign: 'right', fontFamily: 'monospace' }}>₹{fmt(c.arrearsPay)}</td>
-              </tr>}
-              {c.leaveEncashmentPay > 0 && <tr>
-                <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', color: '#334155' }}>Leave Encashment</td>
-                <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', textAlign: 'right', fontFamily: 'monospace' }}>₹{fmt(c.leaveEncashmentPay)}</td>
               </tr>}
             </tbody>
             <tfoot>
@@ -128,12 +125,19 @@ function SalarySlip({ emp, monthLabel }) {
               </tr>
             </thead>
             <tbody>
-              {c.pfEmployee > 0 && <tr><td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9' }}>EPF (Employee Share)</td><td style={{ padding: '7px 20px', textAlign: 'right', fontFamily: 'monospace', borderBottom: '1px solid #f1f5f9' }}>₹{fmt(c.pfEmployee)}</td></tr>}
-              {c.esiEmployee > 0 && <tr><td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9' }}>ESIC (Employee Share)</td><td style={{ padding: '7px 20px', textAlign: 'right', fontFamily: 'monospace', borderBottom: '1px solid #f1f5f9' }}>₹{fmt(c.esiEmployee)}</td></tr>}
+              {c.components.filter(cp => cp.type === 'employee_deduction').map(cp => {
+                const amt = cp._resolved || 0;
+                if (amt === 0) return null;
+                return (
+                  <tr key={cp.id}>
+                    <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9' }}>{cp.name}</td>
+                    <td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', textAlign: 'right', fontFamily: 'monospace' }}>₹{fmt(amt)}</td>
+                  </tr>
+                );
+              })}
               {c.pt > 0 && <tr><td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9' }}>Professional Tax</td><td style={{ padding: '7px 20px', textAlign: 'right', fontFamily: 'monospace', borderBottom: '1px solid #f1f5f9' }}>₹{fmt(c.pt)}</td></tr>}
               {c.lwf > 0 && <tr><td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9' }}>LWF</td><td style={{ padding: '7px 20px', textAlign: 'right', fontFamily: 'monospace', borderBottom: '1px solid #f1f5f9' }}>₹{fmt(c.lwf)}</td></tr>}
               {c.tds > 0 && <tr><td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9', color: '#dc2626' }}>TDS (Income Tax)</td><td style={{ padding: '7px 20px', textAlign: 'right', fontFamily: 'monospace', borderBottom: '1px solid #f1f5f9', color: '#dc2626' }}>₹{fmt(c.tds)}</td></tr>}
-              {c.employeeDeductions > 0 && <tr><td style={{ padding: '7px 20px', borderBottom: '1px solid #f1f5f9' }}>Other Deductions</td><td style={{ padding: '7px 20px', textAlign: 'right', fontFamily: 'monospace', borderBottom: '1px solid #f1f5f9' }}>₹{fmt(c.employeeDeductions)}</td></tr>}
             </tbody>
             <tfoot>
               <tr style={{ background: '#fee2e2' }}>
