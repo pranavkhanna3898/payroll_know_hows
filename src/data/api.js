@@ -194,3 +194,85 @@ export async function getEmployeeFYTaxHistory(employeeId, monthLabel) {
 
   return totalTDS;
 }
+
+// --- Employee Submissions ---
+
+export async function getEmployeeSubmissions(financialYear = null) {
+  if (!supabase) throw new Error('Supabase client not initialized');
+  let query = supabase.from('employee_submissions').select('*').order('created_at', { ascending: false });
+  if (financialYear) query = query.eq('financial_year', financialYear);
+  
+  const { data, error } = await query;
+  if (error) throw error;
+  return data;
+}
+
+export async function getEmployeeSubmissionsByEmployee(employeeId, financialYear = null) {
+  if (!supabase) throw new Error('Supabase client not initialized');
+  let query = supabase.from('employee_submissions').select('*').eq('employee_id', employeeId);
+  if (financialYear) query = query.eq('financial_year', financialYear);
+  
+  const { data, error } = await query;
+  if (error) throw error;
+  return data;
+}
+
+export async function upsertEmployeeSubmission(submission) {
+  if (!supabase) throw new Error('Supabase client not initialized');
+  const { id, ...payload } = submission;
+  
+  if (id) {
+    const { data, error } = await supabase
+      .from('employee_submissions')
+      .update({ ...payload, updated_at: new Date() })
+      .eq('id', id)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  } else {
+    const { data, error } = await supabase
+      .from('employee_submissions')
+      .insert(payload)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  }
+}
+
+export async function updateEmployeeSubmissionStatus(id, status, verifiedData = null) {
+  if (!supabase) throw new Error('Supabase client not initialized');
+  const payload = { status, updated_at: new Date() };
+  if (verifiedData) payload.verified_data = verifiedData;
+
+  const { error } = await supabase
+    .from('employee_submissions')
+    .update(payload)
+    .eq('id', id);
+  if (error) throw error;
+}
+
+// --- Storage API ---
+
+/**
+ * Uploads a file to the 'employee-proofs' bucket
+ * Returns the public URL of the uploaded file.
+ */
+export async function uploadProofFile(employeeId, file) {
+  if (!supabase) throw new Error('Supabase client not initialized');
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${employeeId}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+  
+  const { error } = await supabase.storage
+    .from('employee-proofs')
+    .upload(fileName, file);
+
+  if (error) throw error;
+
+  const { data } = supabase.storage
+    .from('employee-proofs')
+    .getPublicUrl(fileName);
+
+  return data.publicUrl;
+}
