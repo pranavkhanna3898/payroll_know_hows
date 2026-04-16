@@ -40,12 +40,32 @@ export default function FinanceVerificationTab() {
 
   const handleReviewClick = (sub) => {
     setReviewingId(sub.id);
-    // Initialize verified data with submitted data
-    setVerifiedData({ ...(sub.verified_data || sub.submitted_data || {}) });
+    
+    // Auto-cap incoming limits to avoid illegal approvals
+    const incomingData = { ...(sub.verified_data || sub.submitted_data || {}) };
+    if (incomingData.investments80C) incomingData.investments80C = Math.min(150000, Number(incomingData.investments80C));
+    if (incomingData.medical80D_self) incomingData.medical80D_self = Math.min(25000, Number(incomingData.medical80D_self));
+    if (incomingData.medical80D_parents) {
+      const parentLimit = incomingData.medical80D_parents_senior ? 50000 : 25000;
+      incomingData.medical80D_parents = Math.min(parentLimit, Number(incomingData.medical80D_parents));
+    }
+    if (incomingData.nps80CCD1B) incomingData.nps80CCD1B = Math.min(50000, Number(incomingData.nps80CCD1B));
+    if (incomingData.homeLoanInterest) incomingData.homeLoanInterest = Math.min(200000, Number(incomingData.homeLoanInterest));
+    
+    setVerifiedData(incomingData);
   };
 
   const handleVerifiedChange = (field, val) => {
-    setVerifiedData(prev => ({ ...prev, [field]: val }));
+    setVerifiedData(prev => {
+      const next = { ...prev, [field]: val };
+      
+      // Dynamic constraint: if untoggling senior citizen, instantly clamp the parental amount down to 25k
+      if (field === 'medical80D_parents_senior' && !val && next.medical80D_parents > 25000) {
+        next.medical80D_parents = 25000;
+      }
+      
+      return next;
+    });
   };
 
   const handleStatusUpdate = async (id, status) => {
