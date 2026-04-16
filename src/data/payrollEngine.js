@@ -4,6 +4,12 @@
  * Used by both the SimulationsTab (singleEmployee) and the PayrollOps module (batch).
  */
 
+export const isMetroCity = (city) => {
+  if (!city) return false;
+  const c = city.toLowerCase().trim();
+  return ['mumbai', 'delhi', 'new delhi', 'kolkata', 'chennai'].includes(c);
+};
+
 // ─── Professional Tax ────────────────────────────────────────────────────────
 export const getPT = (st, gross) => {
   if (st === 'KA') return gross >= 25000 ? 200 : 0;
@@ -152,7 +158,8 @@ export const computeEmployeePayroll = (emp) => {
     otRate = 0,
     leaveEncashmentDays = 0,
     arrearEntries = [],
-    selectedState = 'KA',
+    work_state = 'KA',
+    work_city = 'Bengaluru',
     reimbursementTaxStrategy = 'year_end',
     epfCalculationMethod = 'flat_ceiling',
     inputMode = 'monthly',
@@ -166,7 +173,6 @@ export const computeEmployeePayroll = (emp) => {
     deductions80GE = 0,
     savingsInterest80TTA = 0,
     ltaClaimed = 0,
-    isMetro = true,
     monthlyRentPaid = 0,
     tdsDeductedSoFar = 0,
     monthsRemaining = 1,
@@ -213,8 +219,8 @@ export const computeEmployeePayroll = (emp) => {
       else c._resolved = Math.min(1800, tempBasic * 0.12);
     } else if (c.matrixId === 'esi_ee') c._resolved = tempGross <= 21000 ? tempGross * 0.0075 : 0;
     else if (c.matrixId === 'esi_er') c._resolved = tempGross <= 21000 ? tempGross * 0.0325 : 0;
-    else if (c.matrixId === 'pt') c._resolved = getPT(selectedState, tempGross);
-    else if (c.matrixId === 'lwf_ee') c._resolved = getLWF(selectedState);
+    else if (c.matrixId === 'pt') c._resolved = getPT(work_state, tempGross);
+    else if (c.matrixId === 'lwf_ee') c._resolved = getLWF(work_state);
   });
 
   // ── FINAL ACCUMULATION ────────────────────────────────────────────────────
@@ -287,7 +293,7 @@ export const computeEmployeePayroll = (emp) => {
     deductions80GE,
     savingsInterest80TTA,
     ltaClaimed,
-    isMetro,
+    isMetro: isMetroCity(work_city),
     standardHRA: standardHRA * 12,
     projectedAnnualBasic,
     projectedAnnualHRA,

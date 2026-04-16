@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { isMetroCity } from '../../data/payrollEngine';
 
 const fmt = v => Math.round(v || 0).toLocaleString('en-IN');
 
@@ -69,12 +70,9 @@ function TaxCard({ emp, activePayrun, updateTaxOverride }) {
                       <option value="old">Old Regime</option>
                     </select>
                   </Field>
-                  <Field label="City Type (HRA)">
-                    <select value={String(field('isMetro', 'isMetro'))} onChange={e => update('isMetro', e.target.value === 'true')} disabled={field('taxRegime') !== 'old'}
-                      style={{ width: '100%', padding: '6px 10px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13 }}>
-                      <option value="true">Metro (50% Basic)</option>
-                      <option value="false">Non-Metro (40% Basic)</option>
-                    </select>
+                  <Field label="City Type (HRA)" hint="Auto-derived from Work City">
+                    <input type="text" value={isMetroCity(field('work_city', 'work_city')) ? `Metro (50%) - ${field('work_city', 'work_city')}` : `Non-Metro (40%) - ${field('work_city', 'work_city')}`} disabled
+                      style={{ width: '100%', padding: '6px 10px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, background: '#f8fafc', color: '#64748b' }} />
                   </Field>
                 </div>
               </div>
@@ -179,7 +177,7 @@ function TaxCard({ emp, activePayrun, updateTaxOverride }) {
                         <span>₹{fmt(c.hraRentExcess)}</span>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', color: c.calculatedHraExempt === c.hraCityLimit ? '#059669' : '#64748b' }}>
-                        <span>3. {field('isMetro', 'isMetro') ? '50%' : '40%'} of Basic</span>
+                        <span>3. {isMetroCity(field('work_city', 'work_city')) ? '50%' : '40%'} of Basic</span>
                         <span>₹{fmt(c.hraCityLimit)}</span>
                       </div>
                       <div style={{ marginTop: 6, paddingTop: 6, borderTop: '1px dashed #bae6fd', fontSize: 12, fontWeight: 800, color: '#0369a1', textAlign: 'right' }}>

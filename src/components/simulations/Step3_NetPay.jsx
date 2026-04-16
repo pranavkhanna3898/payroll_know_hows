@@ -4,7 +4,7 @@ export default function Step3_NetPay({ state }) {
   const {
     grossSalary, basic, tds, pfEmployee, esiEmployee, pt, lwf,
     totalDeductions, netPay, employeeDeductions, monthlyReimbursements,
-    reimbursementTaxStrategy, standardBasic, selectedState
+    reimbursementTaxStrategy, standardBasic, work_state
   } = state;
 
   const fmt = (n) => n.toLocaleString(undefined, { maximumFractionDigits: 2 });
@@ -51,22 +51,22 @@ export default function Step3_NetPay({ state }) {
 
           {/* ③ PT */}
           <div style={{ background: '#f8fafc', borderRadius: 6, padding: '10px 14px', marginBottom: 10, fontSize: 12 }}>
-            <div style={{ fontWeight: 700, color: '#475569', marginBottom: 6 }}>③ Professional Tax — State: {selectedState}</div>
+            <div style={{ fontWeight: 700, color: '#475569', marginBottom: 6 }}>③ Professional Tax — State: {work_state}</div>
             <div style={{ fontFamily: 'monospace', color: '#64748b', lineHeight: 1.7 }}>
               {pt > 0
                 ? <><span>= State slab lookup on Gross ₹{fmt(grossSalary)}</span><br/><span style={{ color: '#dc2626', fontWeight: 700 }}>= − ₹{fmt(pt)}</span></>
-                : <span style={{ color: '#16a34a', fontWeight: 700 }}>Not applicable for state {selectedState} at Gross ₹{fmt(grossSalary)} → ₹0</span>
+                : <span style={{ color: '#16a34a', fontWeight: 700 }}>Not applicable for state {work_state} at Gross ₹{fmt(grossSalary)} → ₹0</span>
               }
             </div>
           </div>
 
           {/* ④ LWF */}
           <div style={{ background: '#f8fafc', borderRadius: 6, padding: '10px 14px', marginBottom: 10, fontSize: 12 }}>
-            <div style={{ fontWeight: 700, color: '#475569', marginBottom: 6 }}>④ Labour Welfare Fund — State: {selectedState}</div>
+            <div style={{ fontWeight: 700, color: '#475569', marginBottom: 6 }}>④ Labour Welfare Fund — State: {work_state}</div>
             <div style={{ fontFamily: 'monospace', color: '#64748b', lineHeight: 1.7 }}>
               {lwf > 0
                 ? <><span>= Fixed state contribution per LWF Act</span><br/><span style={{ color: '#dc2626', fontWeight: 700 }}>= − ₹{fmt(lwf)}</span></>
-                : <span style={{ color: '#16a34a', fontWeight: 700 }}>Not applicable for state {selectedState} → ₹0</span>
+                : <span style={{ color: '#16a34a', fontWeight: 700 }}>Not applicable for state {work_state} → ₹0</span>
               }
             </div>
           </div>

@@ -64,7 +64,7 @@ function generatePTReturn(employees) {
     .map(e => ({
       'Emp Code': e.empCode,
       'Employee Name': e.name,
-      'State': e.selectedState,
+      'State': e.work_state || 'KA',
       'Gross Salary (₹)': fmtN(e.computed.grossSalary),
       'PT Deducted (₹)': fmtN(e.computed.pt),
     }));
@@ -77,7 +77,7 @@ function generateLWFStatement(employees) {
     .map(e => ({
       'Emp Code': e.empCode,
       'Employee Name': e.name,
-      'State': e.selectedState,
+      'State': e.work_state || 'KA',
       'EE Contrib (₹)': fmtN(e.computed.lwf),
       'ER Contrib (₹)': fmtN(e.computed.lwf * 2),
       'Total (₹)': fmtN(e.computed.lwf * 3),

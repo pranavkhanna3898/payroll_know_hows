@@ -6,6 +6,7 @@ import {
   getEmployees, upsertEmployee, deleteEmployee 
 } from '../../data/api';
 import { CATEGORIES } from '../../data/categories';
+import { getPT, getLWF } from '../../data/payrollEngine';
 
 const MATRIX_COMPONENTS = CATEGORIES.flatMap(cat => 
   cat.components.map(comp => ({ ...comp, categoryId: cat.id }))
@@ -101,6 +102,10 @@ function EmployeeManagement({ settings }) {
       name: '',
       department: 'Technology',
       designation: 'Software Engineer',
+      work_state: 'KA',
+      work_city: 'Bengaluru',
+      base_state: 'KA',
+      base_city: 'Bengaluru',
       salary_structure: JSON.parse(JSON.stringify(settings.defaultSalaryComponents || [])),
       input_mode: settings.defaultInputMode || 'monthly',
       bank_info: { bank_name: '', account_no: '', ifsc: '' },
@@ -156,6 +161,33 @@ const convertStructure = (structure, toAnnual) => {
                 <option value="false">Inactive</option>
               </select>
             </Field>
+          </Grid>
+        </SectionCard>
+
+        <SectionCard title="Location Settings" icon="📍">
+          <Grid cols={2}>
+            <div style={{ background: '#f8fafc', padding: 12, borderRadius: 8, border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, color: '#334155' }}>🏢 Work Location (Used for PT / LWF)</div>
+              <Grid cols={2}>
+                <Field label="Work State">
+                  <select value={editingEmp.work_state || 'KA'} onChange={e => setEditingEmp({...editingEmp, work_state: e.target.value})} style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, width: '100%' }}>
+                    {STATES.map(s => <option key={s.code} value={s.code}>{s.name}</option>)}
+                  </select>
+                </Field>
+                <Field label="Work City"><TextInput value={editingEmp.work_city} onChange={v => setEditingEmp({...editingEmp, work_city: v})} /></Field>
+              </Grid>
+            </div>
+            <div style={{ background: '#f8fafc', padding: 12, borderRadius: 8, border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, color: '#334155' }}>🏠 Base Location (Used for calculation of HRA)</div>
+              <Grid cols={2}>
+                <Field label="Base State">
+                  <select value={editingEmp.base_state || 'KA'} onChange={e => setEditingEmp({...editingEmp, base_state: e.target.value})} style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 13, width: '100%' }}>
+                    {STATES.map(s => <option key={s.code} value={s.code}>{s.name}</option>)}
+                  </select>
+                </Field>
+                <Field label="Base City"><TextInput value={editingEmp.base_city} onChange={v => setEditingEmp({...editingEmp, base_city: v})} /></Field>
+              </Grid>
+            </div>
           </Grid>
         </SectionCard>
 
@@ -291,6 +323,31 @@ const convertStructure = (structure, toAnnual) => {
              setEditingEmp({...editingEmp, salary_structure: [...editingEmp.salary_structure, newComp]});
           }} style={{ marginTop: 12, padding: '6px 14px', background: '#e2e8f0', border: 'none', borderRadius: 6, fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>+ Add Component</button>
         </SectionCard>
+
+        {(() => {
+           // Compliance Check
+           const requiresPT = getPT(editingEmp.work_state || 'KA', 100000) > 0;
+           const requiresLWF = getLWF(editingEmp.work_state || 'KA') > 0;
+           
+           const hasPT = editingEmp.salary_structure.some(c => c.matrixId === 'pt');
+           const hasLWF = editingEmp.salary_structure.some(c => c.matrixId === 'lwf_ee' || c.matrixId === 'lwf_er');
+           
+           const warnings = [];
+           if (requiresPT && !hasPT) warnings.push(`Work state (${editingEmp.work_state || 'KA'}) requires Professional Tax, but 'pt' component is missing from structure.`);
+           if (requiresLWF && !hasLWF) warnings.push(`Work state (${editingEmp.work_state || 'KA'}) requires Labour Welfare Fund, but an LWF component is missing from structure.`);
+           
+           if (warnings.length > 0) {
+             return (
+               <div style={{ background: '#fffbeb', border: '1px solid #fcd34d', padding: 16, borderRadius: 8, marginBottom: 20 }}>
+                 <div style={{ fontSize: 14, fontWeight: 700, color: '#b45309', marginBottom: 8 }}>⚠️ Statutory Compliance Warnings</div>
+                 <ul style={{ margin: 0, paddingLeft: 20, color: '#92400e', fontSize: 13 }}>
+                   {warnings.map((w, i) => <li key={i}>{w}</li>)}
+                 </ul>
+               </div>
+             );
+           }
+           return null;
+        })()}
 
         <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 24 }}>
           <button onClick={() => setEditingEmp(null)} style={{ padding: '10px 20px', background: '#e2e8f0', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }}>Cancel</button>

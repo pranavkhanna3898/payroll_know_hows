@@ -14,3 +14,10 @@ CREATE TABLE IF NOT EXISTS employee_submissions (
 -- Enable RLS & Add Policy
 ALTER TABLE employee_submissions ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow all access" ON employee_submissions FOR ALL USING (true);
+
+-- Add Location columns to employees
+ALTER TABLE employees 
+  ADD COLUMN IF NOT EXISTS work_state TEXT,
+  ADD COLUMN IF NOT EXISTS work_city TEXT,
+  ADD COLUMN IF NOT EXISTS base_state TEXT,
+  ADD COLUMN IF NOT EXISTS base_city TEXT;

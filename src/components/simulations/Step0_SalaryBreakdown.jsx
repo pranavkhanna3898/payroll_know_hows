@@ -161,17 +161,17 @@ export default function Step0_SalaryBreakdown({ state }) {
 
             {/* Region */}
             <div style={{ display: 'flex', gap: 6, alignItems: 'center', background: '#f1f5f9', padding: '6px 10px', borderRadius: 6 }}>
-              <label style={{ fontSize: 11, fontWeight: 700, color: '#475569', whiteSpace: 'nowrap' }}>Region:</label>
+              <label style={{ fontSize: 11, fontWeight: 700, color: '#475569', whiteSpace: 'nowrap' }}>Work Loc:</label>
               <select
-                value={state.selectedState}
-                onChange={(e) => state.updateData('selectedState', e.target.value)}
+                value={state.work_state}
+                onChange={(e) => state.updateData('work_state', e.target.value)}
                 style={{ padding: '4px 6px', border: '1px solid #cbd5e1', borderRadius: 4, fontSize: 11, outline: 'none' }}>
                 {STATES.map(st => <option key={st.code} value={st.code}>{st.name} ({st.code})</option>)}
               </select>
               <input
                 type="text" placeholder="City"
-                value={state.selectedCity}
-                onChange={(e) => state.updateData('selectedCity', e.target.value)}
+                value={state.work_city}
+                onChange={(e) => state.updateData('work_city', e.target.value)}
                 style={{ padding: '4px 6px', border: '1px solid #cbd5e1', borderRadius: 4, fontSize: 11, outline: 'none', width: 80 }}
               />
             </div>
@@ -232,7 +232,7 @@ export default function Step0_SalaryBreakdown({ state }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
           {salaryComponents.map((comp) => {
             const matchedMatrix = MATRIX_COMPONENTS.find(c => c.id === comp.matrixId);
-            const isNotApplicable = matchedMatrix?.states?.[state.selectedState] === 'N';
+            const isNotApplicable = matchedMatrix?.states?.[state.work_state] === 'N';
             const taxSched = comp.taxSchedule || (YEAR_END_DEFAULTS.has(comp.type) ? 'year_end' : 'monthly');
 
             return (
@@ -362,7 +362,7 @@ export default function Step0_SalaryBreakdown({ state }) {
                 {/* Legal warning */}
                 {isNotApplicable && (
                   <div style={{ color: '#ef4444', fontSize: 11, fontWeight: 600, marginTop: -4, marginLeft: 2 }}>
-                    ⚠️ {matchedMatrix.name} is legally not applicable in {STATES.find(s => s.code === state.selectedState)?.name || state.selectedState}.
+                    ⚠️ {matchedMatrix.name} is legally not applicable in {STATES.find(s => s.code === state.work_state)?.name || state.work_state}.
                   </div>
                 )}
               </React.Fragment>

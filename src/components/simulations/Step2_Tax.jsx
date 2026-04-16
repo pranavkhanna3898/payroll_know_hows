@@ -1,9 +1,10 @@
 import React from 'react';
+import { isMetroCity } from '../../data/payrollEngine';
 
 export default function Step2_Tax({ state }) {
   const {
     taxRegime, investments80C, medical80D_self, medical80D_parents, medical80D_parents_senior, nps80CCD1B, homeLoanInterest, deductions80GE, savingsInterest80TTA, ltaClaimed,
-    isMetro, monthlyRentPaid, tdsDeductedSoFar, monthsRemaining,
+    work_city, monthlyRentPaid, tdsDeductedSoFar, monthsRemaining,
     updateData, grossSalary, annualGross, taxableIncome, annualTax, tds, taxFormulaDetail,
     calculatedHraExempt, hraFormulaString, 
     hraActual, hraRentExcess, hraCityLimit
@@ -70,11 +71,8 @@ export default function Step2_Tax({ state }) {
             <input type="number" value={monthlyRentPaid} disabled={taxRegime === 'new'} onChange={(e) => updateData('monthlyRentPaid', e.target.value)} />
           </div>
           <div className="sim-input-group" style={{opacity: taxRegime === 'new' ? 0.4 : 1}}>
-            <label>City Type (For HRA)</label>
-            <select value={isMetro} disabled={taxRegime === 'new'} onChange={(e) => updateData('isMetro', e.target.value === 'true')}>
-              <option value={true}>Metro (50% Basic)</option>
-              <option value={false}>Non-Metro (40% Basic)</option>
-            </select>
+            <label className="has-tooltip" data-tooltip="Auto-derived from Work City">City Type (For HRA)</label>
+            <input type="text" value={isMetroCity(work_city) ? `Metro (50%) - ${work_city}` : `Non-Metro (40%) - ${work_city}`} disabled />
           </div>
 
           {/* Others & YTD */}
@@ -116,7 +114,7 @@ export default function Step2_Tax({ state }) {
               <div style={{ display: 'grid', gridTemplateColumns: 'minmax(150px, 1fr) minmax(150px, 1fr)', gap: 10, fontFamily: 'monospace', fontSize: 11 }}>
                 <div style={{ color: calculatedHraExempt === hraActual ? '#059669' : '#64748b', fontWeight: calculatedHraExempt === hraActual ? 700 : 400 }}>Actual HRA Received: ₹{Math.round(hraActual).toLocaleString()}</div>
                 <div style={{ color: calculatedHraExempt === hraRentExcess ? '#059669' : '#64748b', fontWeight: calculatedHraExempt === hraRentExcess ? 700 : 400 }}>Rent Paid - 10% Basic: ₹{Math.round(hraRentExcess).toLocaleString()}</div>
-                <div style={{ color: calculatedHraExempt === hraCityLimit ? '#059669' : '#64748b', fontWeight: calculatedHraExempt === hraCityLimit ? 700 : 400 }}>{isMetro ? '50%' : '40%'} of Basic Salary: ₹{Math.round(hraCityLimit).toLocaleString()}</div>
+                <div style={{ color: calculatedHraExempt === hraCityLimit ? '#059669' : '#64748b', fontWeight: calculatedHraExempt === hraCityLimit ? 700 : 400 }}>{isMetroCity(work_city) ? '50%' : '40%'} of Basic Salary: ₹{Math.round(hraCityLimit).toLocaleString()}</div>
                 <div style={{ fontWeight: 800, color: '#0369a1', textAlign: 'right' }}>Final Allowed Exemption: ₹{Math.round(calculatedHraExempt).toLocaleString()}</div>
               </div>
             </div>

@@ -8,7 +8,7 @@ import Step3_NetPay from './Step3_NetPay';
 import Step4_BankFile from './Step4_BankFile';
 import Step5_Statutory from './Step5_Statutory';
 import { CATEGORIES } from '../../data/categories';
-import { computeEmployeePayroll, evaluateTaxLiability } from '../../data/payrollEngine';
+import { computeEmployeePayroll, evaluateTaxLiability, isMetroCity } from '../../data/payrollEngine';
 
 const MATRIX_COMPONENTS = CATEGORIES.flatMap(cat => cat.components);
 
@@ -33,7 +33,10 @@ export default function SimulationsTab() {
       bankName: emp.bank_name || '',
       accNumber: emp.account_number || '',
       ifsc: emp.ifsc || '',
-      selectedState: emp.selected_state || 'KA',
+      work_state: emp.work_state || 'KA',
+      work_city: emp.work_city || 'Bengaluru',
+      base_state: emp.base_state || 'KA',
+      base_city: emp.base_city || 'Bengaluru',
       // Reset variables that are simulation specific
       lopDays: 0,
       overtimeHours: 0,
@@ -56,8 +59,10 @@ export default function SimulationsTab() {
     leaveEncashmentDays: 0,
     arrearEntries: [],
 
-    selectedState: 'KA',
-    selectedCity: '',
+    work_state: 'KA',
+    work_city: 'Bengaluru',
+    base_state: 'KA',
+    base_city: 'Bengaluru',
     reimbursementTaxStrategy: 'year_end',
     inputMode: 'monthly',  // 'monthly' | 'annual'
 
@@ -71,7 +76,6 @@ export default function SimulationsTab() {
     deductions80GE: 0,
     savingsInterest80TTA: 0,
     ltaClaimed: 0,
-    isMetro: true,
     monthlyRentPaid: 0,
     epfCalculationMethod: 'prorated_ceiling',
     tdsDeductedSoFar: 0,
@@ -160,7 +164,7 @@ export default function SimulationsTab() {
   const { 
     annualTax, taxableIncome, tds, monthlyReimbursements, annualGross, 
     taxRegime, investments80C, medical80D_self, medical80D_parents, medical80D_parents_senior, nps80CCD1B, homeLoanInterest,
-    deductions80GE, savingsInterest80TTA, ltaClaimed, isMetro, standardHRA, 
+    deductions80GE, savingsInterest80TTA, ltaClaimed, standardHRA, 
     projectedAnnualBasic, projectedAnnualHRA, annualRent,
     hraActual, hraRentExcess, hraCityLimit, calculatedHraExempt, hraFormulaString
   } = computed;
@@ -179,7 +183,7 @@ export default function SimulationsTab() {
     deductions80GE,
     savingsInterest80TTA,
     ltaClaimed,
-    isMetro,
+    isMetro: isMetroCity(data.work_city),
     standardHRA,
     projectedAnnualBasic,
     projectedAnnualHRA,
