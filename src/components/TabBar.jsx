@@ -6,6 +6,8 @@ const TABS = [
   { id: "simulations", label: "⚙️ Simulations" },
   { id: "settings", label: "🏢 Company Settings" },
   { id: "payroll", label: "▶️ Payroll Operations" },
+  { id: "portal", label: "👤 Employee Portal" },
+  { id: "finance", label: "🛡️ Finance Dashboard" },
   { id: "detail", label: "📋 Component Detail" },
 ];
 

@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
-import { getEmployees, getPayruns, createPayrun, updatePayrunStatus, getPayrunAdjustments, savePayrunAdjustment, getEmployeeFYTaxHistory } from '../../data/api';
+import { getEmployees, getPayruns, createPayrun, updatePayrunStatus, getPayrunAdjustments, savePayrunAdjustment, getEmployeeFYTaxHistory, getEmployeeSubmissions } from '../../data/api';
 import { computeEmployeePayroll } from '../../data/payrollEngine';
-import { getDaysInMonth, getMonthsRemainingInFY } from '../../utils/dateUtils';
+import { getDaysInMonth, getMonthsRemainingInFY, getFinancialYearRange } from '../../utils/dateUtils';
 import PayrollOps_Initiate from './PayrollOps_Initiate';
 import PayrollOps_Review from './PayrollOps_Review';
 import PayrollOps_Tax from './PayrollOps_Tax';
@@ -102,20 +102,44 @@ export default function PayrollOpsTab() {
     const days = getDaysInMonth(activePayrun.month_year);
     const monthsLeft = getMonthsRemainingInFY(activePayrun.month_year);
 
-    // 2. If moving to Tax step (step 2), fetch historical TDS if not already set
-    async function loadHistory() {
-      if (step !== 2) return;
+    // 2. If moving to Tax step (step 2) or Review step (step 1), fetch auxiliary data
+    async function loadData() {
+      if (step !== 1 && step !== 2) return;
       
       const newTaxOverrides = { ...(activePayrun.taxOverrides || {}) };
-      let changed = false;
+      const newAdjs = { ...(activePayrun.adjustments || {}) };
+      let taxChanged = false;
+      let adjChanged = false;
+
+      // Pre-fetch all verified submissions for the FY to avoid N+1 queries
+      let verifiedSubs = [];
+      try {
+        const fy = getFinancialYearRange(activePayrun.month_year);
+        const subs = await getEmployeeSubmissions(fy);
+        verifiedSubs = subs.filter(s => s.status === 'verified');
+      } catch (e) {
+        console.error('Failed to load employee submissions:', e);
+      }
 
       for (const empId of activePayrun.employeeIds) {
         const ov = newTaxOverrides[empId] || {};
+        const adj = newAdjs[empId] || {};
         
         // Auto-set months remaining if not manually touched
         if (ov.monthsRemaining === undefined) {
           ov.monthsRemaining = monthsLeft;
-          changed = true;
+          taxChanged = true;
+        }
+
+        // Apply verified IT Declarations
+        const empDecl = verifiedSubs.find(s => s.employee_id === empId && s.type === 'it_declaration');
+        if (empDecl && empDecl.verified_data) {
+          ['investments80C', 'medical80D', 'nps80CCD1B', 'homeLoanInterest', 'deductions80GE', 'savingsInterest80TTA', 'monthlyRentPaid', 'ltaClaimed'].forEach(f => {
+            if (empDecl.verified_data[f] !== undefined && ov[f] === undefined) {
+              ov[f] = Number(empDecl.verified_data[f]);
+              taxChanged = true;
+            }
+          });
         }
 
         // Fetch history if TDS deducted is still 0/undefined and not manually overridden
@@ -123,21 +147,25 @@ export default function PayrollOpsTab() {
           try {
             const history = await getEmployeeFYTaxHistory(empId, activePayrun.month_year);
             ov.tdsDeductedSoFar = history;
-            changed = true;
+            taxChanged = true;
           } catch (e) {
             console.error(`Failed to fetch tax history for ${empId}:`, e);
           }
         }
         
         newTaxOverrides[empId] = ov;
+        newAdjs[empId] = adj;
       }
 
-      if (changed) {
+      if (taxChanged) {
         setActivePayrun(prev => ({ ...prev, taxOverrides: newTaxOverrides }));
+      }
+      if (adjChanged) {
+        setActivePayrun(prev => ({ ...prev, adjustments: newAdjs }));
       }
     }
 
-    loadHistory();
+    loadData();
 
     // 3. Auto-fill daysInMonth in adjustments if not present
     if (activePayrun.employeeIds.some(id => !activePayrun.adjustments?.[id]?.daysInMonth)) {

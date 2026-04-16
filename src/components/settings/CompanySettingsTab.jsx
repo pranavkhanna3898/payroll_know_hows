@@ -18,6 +18,7 @@ const SECTIONS = [
   { id: 'bank',       icon: '🏦', label: 'Bank Integration' },
   { id: 'structure',  icon: '⚙️', label: 'Salary Structure' },
   { id: 'employees',  icon: '👥', label: 'Employees' },
+  { id: 'submissions',icon: '📅', label: 'Submission Windows' },
 ];
 
 const Field = ({ label, children, hint }) => (
@@ -626,6 +627,59 @@ function SalaryStructureTemplate({ s, update }) {
   );
 }
 
+// ── Comp: SubmissionWindows ───────────────────────────────────────────────────
+function SubmissionWindows({ s, update }) {
+  const windows = s.submissionWindows || { 
+    itDeclaration: { enabled: false, startDate: '', endDate: '' },
+    reimbursement: { enabled: false, startDate: '', endDate: '' }
+  };
+
+  const updateWindow = (type, field, val) => {
+    update('submissionWindows', {
+      ...windows,
+      [type]: { ...windows[type], [field]: val }
+    });
+  };
+
+  return (
+    <div style={{ animation: 'fadeIn 0.2s' }}>
+      <SectionCard title="IT Declarations (Section 80, House Property, etc.)" icon="📝">
+        <div style={{ marginBottom: 16 }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', color: '#0f172a' }}>
+            <input type="checkbox" checked={windows.itDeclaration.enabled} onChange={e => updateWindow('itDeclaration', 'enabled', e.target.checked)} 
+              style={{ width: 16, height: 16, cursor: 'pointer' }} />
+            Open Declaration Window for Employees
+          </label>
+          <p style={{ margin: '4px 0 0 24px', fontSize: 12, color: '#64748b' }}>If enabled, employees can submit or revise their tax-saving declarations from the Employee Portal.</p>
+        </div>
+        {windows.itDeclaration.enabled && (
+          <Grid cols={2}>
+            <Field label="Window Start Date"><TextInput type="date" value={windows.itDeclaration.startDate} onChange={v => updateWindow('itDeclaration', 'startDate', v)} /></Field>
+            <Field label="Window End Date"><TextInput type="date" value={windows.itDeclaration.endDate} onChange={v => updateWindow('itDeclaration', 'endDate', v)} /></Field>
+          </Grid>
+        )}
+      </SectionCard>
+
+      <SectionCard title="Reimbursement Claims" icon="🧾">
+        <div style={{ marginBottom: 16 }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', color: '#0f172a' }}>
+            <input type="checkbox" checked={windows.reimbursement.enabled} onChange={e => updateWindow('reimbursement', 'enabled', e.target.checked)} 
+              style={{ width: 16, height: 16, cursor: 'pointer' }}/>
+            Open Expense Claim Window for Employees
+          </label>
+          <p style={{ margin: '4px 0 0 24px', fontSize: 12, color: '#64748b' }}>If enabled, employees can submit proofs for their reimbursement allowances.</p>
+        </div>
+        {windows.reimbursement.enabled && (
+          <Grid cols={2}>
+            <Field label="Window Start Date"><TextInput type="date" value={windows.reimbursement.startDate} onChange={v => updateWindow('reimbursement', 'startDate', v)} /></Field>
+            <Field label="Window End Date"><TextInput type="date" value={windows.reimbursement.endDate} onChange={v => updateWindow('reimbursement', 'endDate', v)} /></Field>
+          </Grid>
+        )}
+      </SectionCard>
+    </div>
+  );
+}
+
 // ── Main CompanySettingsTab ───────────────────────────────────────────────────
 export default function CompanySettingsTab() {
   const [settings, setSettings] = useState(() => getDefaults());
@@ -658,13 +712,14 @@ export default function CompanySettingsTab() {
   const renderSection = () => {
     if (loading) return <div style={{ padding: 40, textAlign: 'center', color: '#94a3b8' }}>Loading settings...</div>;
     switch (activeSection) {
-      case 'company':    return <CompanyProfile s={settings} update={update} />;
-      case 'statutory':  return <StatutoryCompliance s={settings} update={update} />;
-      case 'cycle':      return <PayrollCycleSettings s={settings} update={update} />;
-      case 'bank':       return <BankIntegration s={settings} update={update} />;
-      case 'structure':  return <SalaryStructureTemplate s={settings} update={update} />;
-      case 'employees':  return <EmployeeManagement settings={settings} />;
-      default:           return null;
+      case 'company':      return <CompanyProfile s={settings} update={update} />;
+      case 'statutory':    return <StatutoryCompliance s={settings} update={update} />;
+      case 'cycle':        return <PayrollCycleSettings s={settings} update={update} />;
+      case 'bank':         return <BankIntegration s={settings} update={update} />;
+      case 'structure':    return <SalaryStructureTemplate s={settings} update={update} />;
+      case 'employees':    return <EmployeeManagement settings={settings} />;
+      case 'submissions':  return <SubmissionWindows s={settings} update={update} />;
+      default:             return null;
     }
   };
 
