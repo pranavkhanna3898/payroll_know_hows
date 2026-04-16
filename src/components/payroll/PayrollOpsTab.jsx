@@ -329,6 +329,17 @@ export default function PayrollOpsTab() {
   const confirmPayrun = useCallback(async () => {
     if (!activePayrun) return;
     try {
+      const computedEmpData = getPayrunEmployees();
+      const promises = computedEmpData.map(emp => {
+        const adj = { ...(activePayrun.adjustments?.[emp.id] || {}) };
+        const taxOv = activePayrun.taxOverrides?.[emp.id];
+        if (taxOv) {
+          adj.taxOverrides = taxOv;
+        }
+        return savePayrunAdjustment(activePayrun.id, emp.id, adj, emp.computed);
+      });
+      await Promise.all(promises);
+
       await updatePayrunStatus(activePayrun.id, 'confirmed');
       const confirmed = { ...activePayrun, status: 'confirmed', confirmedAt: new Date().toISOString() };
       setPayruns(prev => prev.map(p => p.id === confirmed.id ? confirmed : p));
@@ -336,6 +347,20 @@ export default function PayrollOpsTab() {
       setStep(4);
     } catch (e) {
       alert('Error confirming payrun: ' + e.message);
+    }
+  }, [activePayrun, getPayrunEmployees]);
+
+  const completePayrun = useCallback(async () => {
+    if (!activePayrun) return;
+    try {
+      await updatePayrunStatus(activePayrun.id, 'completed');
+      const completed = { ...activePayrun, status: 'completed' };
+      setPayruns(prev => prev.map(p => p.id === completed.id ? completed : p));
+      setActivePayrun(null);
+      alert('Payrun successfully completed!');
+      setStep(0);
+    } catch (e) {
+      alert('Error completing payrun: ' + e.message);
     }
   }, [activePayrun]);
 
@@ -384,7 +409,7 @@ export default function PayrollOpsTab() {
         {step === 1 && <PayrollOps_Review {...sharedProps} />}
         {step === 2 && <PayrollOps_Tax {...sharedProps} />}
         {step === 3 && <PayrollOps_Confirm {...sharedProps} onConfirm={confirmPayrun} />}
-        {step === 4 && <PayrollOps_SlipViewer {...sharedProps} />}
+        {step === 4 && <PayrollOps_SlipViewer {...sharedProps} onComplete={completePayrun} />}
       </div>
     </div>
   );

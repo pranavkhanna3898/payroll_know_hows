@@ -175,7 +175,7 @@ function SalarySlip({ emp, monthLabel }) {
   );
 }
 
-export default function PayrollOps_SlipViewer({ payrunEmployees, activePayrun, toggleSlip, publishAll, onBack }) {
+export default function PayrollOps_SlipViewer({ payrunEmployees, activePayrun, toggleSlip, publishAll, onBack, onComplete }) {
   const [selectedEmp, setSelectedEmp] = useState(payrunEmployees[0] || null);
   const monthLabel = activePayrun?.monthLabel || 'Current Month';
   const publishedSlips = activePayrun?.publishedSlips || [];
@@ -290,8 +290,9 @@ export default function PayrollOps_SlipViewer({ payrunEmployees, activePayrun, t
         </div>
       </div>
 
-      <div style={{ marginTop: 24 }}>
+      <div style={{ marginTop: 24, display: 'flex', justifyContent: 'space-between' }}>
         <button onClick={onBack} style={{ padding: '10px 20px', background: '#e2e8f0', color: '#334155', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: 13 }}>← Back to Exports</button>
+        <button onClick={onComplete} style={{ padding: '10px 20px', background: 'linear-gradient(135deg,#10b981,#059669)', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 700, fontSize: 13 }}>Complete Payroll ✔</button>
       </div>
     </div>
   );
